@@ -8,8 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.exwhythat.mobilization.R;
+import com.exwhythat.mobilization.ui.base.BaseActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

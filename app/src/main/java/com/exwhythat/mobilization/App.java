@@ -3,6 +3,9 @@ package com.exwhythat.mobilization;
 import android.app.Application;
 import android.content.Context;
 
+import com.exwhythat.mobilization.di.component.AppComponent;
+import com.exwhythat.mobilization.di.component.DaggerAppComponent;
+import com.exwhythat.mobilization.di.module.AppModule;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -13,6 +16,8 @@ import timber.log.Timber;
  */
 
 public class App extends Application {
+
+    private AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
@@ -26,7 +31,11 @@ public class App extends Application {
         }
         LeakCanary.install(this);
 
-        // TODO: Init Dagger modules here
+        // Init dagger app modules
+        mAppComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+        mAppComponent.inject(this);
 
         // Init Timber and Stetho in debug mode only
         if (BuildConfig.DEBUG) {

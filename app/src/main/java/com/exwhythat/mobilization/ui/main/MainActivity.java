@@ -5,24 +5,27 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.ui.about.AboutActivity;
+import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity
+import javax.inject.Inject;
+
+public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
-    private MainPresenter presenter;
+    @Inject
+    MainPresenter<MainView> mPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new MainPresenterImpl(this);
         initActivity();
     }
 
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
+        getActivityComponent().inject(this);
+        mPresenter.onAttach(this);
+        mPresenter.onSomeActionFromActivity();
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
@@ -60,6 +66,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void someViewAction() {
         //TODO insert some view action here
+        Toast.makeText(this, "someViewAction has been called!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -88,5 +95,11 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }
