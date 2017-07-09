@@ -1,20 +1,20 @@
-package com.exwhythat.mobilization.ui.activity;
+package com.exwhythat.mobilization.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.exwhythat.mobilization.R;
 
-public class AboutActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_settings);
         initActivity();
     }
 
@@ -37,6 +37,6 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     public static void start(Context context) {
-        context.startActivity(new Intent(context, AboutActivity.class));
+        context.startActivity(new Intent(context, SettingsActivity.class));
     }
 }
