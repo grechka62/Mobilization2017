@@ -9,13 +9,29 @@ import android.view.MenuItem;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+
 public class AboutActivity extends BaseActivity {
+
+    @Inject
+    AboutPresenter<AboutView> mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         initActivity();
+    }
+
+    private void initActivity() {
+        getActivityComponent().inject(this);
+        setUnbinder(ButterKnife.bind(this));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -26,13 +42,6 @@ public class AboutActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void initActivity() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 

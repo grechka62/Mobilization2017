@@ -4,9 +4,15 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import com.exwhythat.mobilization.di.ActivityContext;
+import com.exwhythat.mobilization.ui.about.AboutPresenter;
+import com.exwhythat.mobilization.ui.about.AboutPresenterImpl;
+import com.exwhythat.mobilization.ui.about.AboutView;
 import com.exwhythat.mobilization.ui.main.MainPresenter;
 import com.exwhythat.mobilization.ui.main.MainPresenterImpl;
 import com.exwhythat.mobilization.ui.main.MainView;
+import com.exwhythat.mobilization.ui.settings.SettingsPresenter;
+import com.exwhythat.mobilization.ui.settings.SettingsPresenterImpl;
+import com.exwhythat.mobilization.ui.settings.SettingsView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,6 +43,18 @@ public class ActivityModule {
     @Provides
     MainPresenter<MainView> provideMainPresenter(
             MainPresenterImpl<MainView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    SettingsPresenter<SettingsView> provideSettingsPresenter(
+            SettingsPresenterImpl<SettingsView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AboutPresenter<AboutView> provideAboutPresenter(
+            AboutPresenterImpl<AboutView> presenter) {
         return presenter;
     }
 }

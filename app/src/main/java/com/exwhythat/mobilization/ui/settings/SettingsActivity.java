@@ -10,13 +10,26 @@ import android.view.MenuItem;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 
+import javax.inject.Inject;
+
 public class SettingsActivity extends BaseActivity {
+
+    @Inject
+    SettingsPresenter<SettingsView> mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         initActivity();
+    }
+
+    private void initActivity() {
+        getActivityComponent().inject(this);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -27,13 +40,6 @@ public class SettingsActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void initActivity() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
