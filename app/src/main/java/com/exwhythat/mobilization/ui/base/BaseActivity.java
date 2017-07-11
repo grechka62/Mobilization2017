@@ -14,7 +14,7 @@ import butterknife.Unbinder;
  * Created by exwhythat on 09.07.17.
  */
 
-public class BaseActivity extends AppCompatActivity implements BaseView {
+public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
     private ActivityComponent mActivityComponent;
 

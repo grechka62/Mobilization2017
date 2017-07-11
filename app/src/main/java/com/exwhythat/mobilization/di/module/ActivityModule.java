@@ -13,6 +13,9 @@ import com.exwhythat.mobilization.ui.main.MainView;
 import com.exwhythat.mobilization.ui.settings.SettingsPresenter;
 import com.exwhythat.mobilization.ui.settings.SettingsPresenterImpl;
 import com.exwhythat.mobilization.ui.settings.SettingsView;
+import com.exwhythat.mobilization.ui.weather.WeatherPresenter;
+import com.exwhythat.mobilization.ui.weather.WeatherPresenterImpl;
+import com.exwhythat.mobilization.ui.weather.WeatherView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,6 +46,12 @@ public class ActivityModule {
     @Provides
     MainPresenter<MainView> provideMainPresenter(
             MainPresenterImpl<MainView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    WeatherPresenter<WeatherView> provideWeatherPresenter(
+            WeatherPresenterImpl<WeatherView> presenter) {
         return presenter;
     }
 

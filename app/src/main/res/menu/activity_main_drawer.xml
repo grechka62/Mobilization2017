@@ -3,6 +3,13 @@
 
     <group android:id="@+id/topItems">
         <item
+            android:id="@+id/nav_weather"
+            android:icon="@drawable/ic_umbrella"
+            android:title="@string/action_weather" />
+    </group>
+
+    <group android:id="@+id/midItems">
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/action_settings" />
@@ -11,7 +18,7 @@
     <group android:id="@+id/botItems">
         <item
             android:id="@+id/nav_about"
-            android:icon="@android:drawable/ic_menu_help"
+            android:icon="@drawable/ic_help_outline"
             android:title="@string/action_about" />
     </group>
 

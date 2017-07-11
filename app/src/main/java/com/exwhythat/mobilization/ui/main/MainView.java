@@ -7,5 +7,10 @@ import com.exwhythat.mobilization.ui.base.BaseView;
  */
 
 public interface MainView extends BaseView {
-    void someViewAction();
+
+    void showWeatherFragment();
+
+    void showAboutFragment();
+
+    void showSettingsFragment();
 }

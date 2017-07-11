@@ -7,6 +7,7 @@ import javax.inject.Inject;
  */
 
 public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V> {
+
     private V mView;
 
     @Inject

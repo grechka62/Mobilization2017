@@ -1,19 +1,25 @@
 package com.exwhythat.mobilization.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.ui.about.AboutActivity;
+import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
-import com.exwhythat.mobilization.ui.settings.SettingsActivity;
+import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.ui.settings.SettingsFragment;
+import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 
 import javax.inject.Inject;
 
@@ -35,19 +41,22 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    private CharSequence mTitle;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initActivity();
-    }
-
-    private void initActivity() {
         getActivityComponent().inject(this);
         setUnbinder(ButterKnife.bind(this));
         setSupportActionBar(mToolbar);
         initNavigationDrawer(mToolbar);
         mPresenter.onAttach(this);
-        mPresenter.onSomeActionFromActivity();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_placeholder, WeatherFragment.newInstance())
+                    .commit();
+        }
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
@@ -59,12 +68,14 @@ public class MainActivity extends BaseActivity
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
@@ -74,19 +85,16 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void someViewAction() {
-        //TODO insert some view action here
-        Toast.makeText(this, "someViewAction has been called!", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_weather:
+                mPresenter.onDrawerWeatherClick();
+                break;
             case R.id.nav_settings:
-                SettingsActivity.start(this);
+                mPresenter.onDrawerSettingsClick();
                 break;
             case R.id.nav_about:
-                AboutActivity.start(this);
+                mPresenter.onDrawerAboutClick();
                 break;
             default:
                 throw new IllegalStateException("Navigation drawer undeclared item");
@@ -109,5 +117,47 @@ public class MainActivity extends BaseActivity
     protected void onDestroy() {
         mPresenter.onDetach();
         super.onDestroy();
+    }
+
+    @Override
+    public void showWeatherFragment() {
+        navigateToFragment(WeatherFragment.newInstance(), WeatherFragment.TAG, R.string.action_weather);
+    }
+
+    @Override
+    public void showAboutFragment() {
+        navigateToFragment(AboutFragment.newInstance(), AboutFragment.TAG, R.string.action_about);
+    }
+
+    @Override
+    public void showSettingsFragment() {
+        navigateToFragment(SettingsFragment.newInstance(), SettingsFragment.TAG, R.string.action_settings);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle(mTitle);
+        }
+    }
+
+    private void navigateToFragment(BaseFragment fragment, String tag, @StringRes int titleResId) {
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment foundFragment = fm.findFragmentByTag(tag);
+        if (foundFragment != null) {
+            mDrawerLayout.closeDrawer(Gravity.START);
+            return;
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
+                .replace(R.id.fragment_placeholder, fragment, tag)
+                .commit();
+        setTitle(getString(titleResId));
     }
 }

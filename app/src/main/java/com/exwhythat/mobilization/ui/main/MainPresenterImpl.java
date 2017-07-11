@@ -17,8 +17,17 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
     }
 
     @Override
-    public void onSomeActionFromActivity() {
-        //TODO some logic goes here
-        getMvpView().someViewAction();
+    public void onDrawerWeatherClick() {
+        getMvpView().showWeatherFragment();
+    }
+
+    @Override
+    public void onDrawerAboutClick() {
+        getMvpView().showAboutFragment();
+    }
+
+    @Override
+    public void onDrawerSettingsClick() {
+        getMvpView().showSettingsFragment();
     }
 }

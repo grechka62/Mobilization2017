@@ -7,5 +7,7 @@ import com.exwhythat.mobilization.ui.base.BasePresenter;
  */
 
 public interface MainPresenter<V extends MainView> extends BasePresenter<V> {
-    void onSomeActionFromActivity();
+    void onDrawerWeatherClick();
+    void onDrawerAboutClick();
+    void onDrawerSettingsClick();
 }
