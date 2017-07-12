@@ -2,6 +2,7 @@ package com.exwhythat.mobilization.ui.weather;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     public static final String TAG = "WeatherFragment";
 
     @Inject
-    WeatherPresenter<WeatherView> mPresenter;
+    WeatherPresenter<WeatherView> presenter;
 
     public WeatherFragment() {}
 
+    @NonNull
     public static WeatherFragment newInstance() {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
@@ -44,7 +46,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
-            mPresenter.onAttach(this);
+            presenter.onAttach(this);
         }
 
         return view;
@@ -52,7 +54,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
 
     @Override
     public void onDestroyView() {
-        mPresenter.onDetach();
+        presenter.onDetach();
         super.onDestroyView();
     }
 }

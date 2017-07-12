@@ -2,6 +2,7 @@ package com.exwhythat.mobilization.ui.settings;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,11 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
     public static final String TAG = "SettingsFragment";
 
     @Inject
-    SettingsPresenterImpl<SettingsView> mPresenter;
+    SettingsPresenterImpl<SettingsView> presenter;
 
     public SettingsFragment() {}
 
+    @NonNull
     public static SettingsFragment newInstance() {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
@@ -39,7 +41,7 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
-            mPresenter.onAttach(this);
+            presenter.onAttach(this);
         }
 
         return view;
@@ -52,7 +54,7 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
 
     @Override
     public void onDestroyView() {
-        mPresenter.onDetach();
+        presenter.onDetach();
         super.onDestroyView();
     }
 }

@@ -1,6 +1,7 @@
 package com.exwhythat.mobilization.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -30,18 +31,18 @@ public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    MainPresenter<MainView> mPresenter;
+    MainPresenter<MainView> presenter;
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+    DrawerLayout drawerLayout;
 
     @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
+    NavigationView navigationView;
 
-    private CharSequence mTitle;
+    private CharSequence title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +50,9 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         getActivityComponent().inject(this);
         setUnbinder(ButterKnife.bind(this));
-        setSupportActionBar(mToolbar);
-        initNavigationDrawer(mToolbar);
-        mPresenter.onAttach(this);
+        setSupportActionBar(toolbar);
+        initNavigationDrawer(toolbar);
+        presenter.onAttach(this);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_placeholder, WeatherFragment.newInstance())
@@ -61,11 +62,11 @@ public class MainActivity extends BaseActivity
 
     private void initNavigationDrawer(Toolbar toolbar) {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -85,29 +86,29 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_weather:
-                mPresenter.onDrawerWeatherClick();
+                presenter.onDrawerWeatherClick();
                 break;
             case R.id.nav_settings:
-                mPresenter.onDrawerSettingsClick();
+                presenter.onDrawerSettingsClick();
                 break;
             case R.id.nav_about:
-                mPresenter.onDrawerAboutClick();
+                presenter.onDrawerAboutClick();
                 break;
             default:
                 throw new IllegalStateException("Navigation drawer undeclared item");
         }
 
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -115,7 +116,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onDestroy() {
-        mPresenter.onDetach();
+        presenter.onDetach();
         super.onDestroy();
     }
 
@@ -136,10 +137,10 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
+        this.title = title;
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
-            ab.setTitle(mTitle);
+            ab.setTitle(this.title);
         }
     }
 
@@ -148,7 +149,7 @@ public class MainActivity extends BaseActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment foundFragment = fm.findFragmentByTag(tag);
         if (foundFragment != null) {
-            mDrawerLayout.closeDrawer(Gravity.START);
+            drawerLayout.closeDrawer(Gravity.START);
             return;
         }
 

@@ -2,6 +2,7 @@ package com.exwhythat.mobilization;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.exwhythat.mobilization.di.component.AppComponent;
 import com.exwhythat.mobilization.di.component.DaggerAppComponent;
@@ -17,7 +18,7 @@ import timber.log.Timber;
 
 public class App extends Application {
 
-    private AppComponent mAppComponent;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -32,10 +33,10 @@ public class App extends Application {
         LeakCanary.install(this);
 
         // Init dagger app modules
-        mAppComponent = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
-        mAppComponent.inject(this);
+        appComponent.inject(this);
 
         // Init Timber and Stetho in debug mode only
         if (BuildConfig.DEBUG) {
@@ -44,17 +45,16 @@ public class App extends Application {
         }
     }
 
+    @NonNull
     public static App get(Context context) {
         return ((App)context.getApplicationContext());
     }
 
-    /**
-     * Customized Timber.DebugTree
-     */
+    /** Customized Timber.DebugTree */
     private class AppDebugTree extends Timber.DebugTree {
         @Override
         protected String createStackElementTag(StackTraceElement element) {
-            // This adds line number to log message
+            // Add line number to every log message
             return super.createStackElementTag(element) + ":" + element.getLineNumber();
         }
     }

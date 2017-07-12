@@ -18,38 +18,46 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment implements BaseView {
 
-    protected Unbinder mUnbinder;
+    protected Unbinder unbinder;
 
-    private BaseActivity mActivity;
+    private BaseActivity activity;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mUnbinder = ButterKnife.bind(view);
+        unbinder = ButterKnife.bind(view);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof BaseActivity) {
-            mActivity = (BaseActivity) context;
+            activity = (BaseActivity) context;
         }
+    }
+
+    @Override
+    public void onDetach() {
+        activity = null;
+        super.onDetach();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mUnbinder.unbind();
+        unbinder.unbind();
     }
 
+    @Nullable
     public ActivityComponent getActivityComponent() {
-        if (mActivity != null) {
-            return mActivity.getActivityComponent();
+        if (activity != null) {
+            return activity.getActivityComponent();
         }
         return null;
     }
 
+    @Nullable
     public BaseActivity getBaseActivity() {
-        return mActivity;
+        return activity;
     }
 }

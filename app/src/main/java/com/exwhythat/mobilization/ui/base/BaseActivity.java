@@ -1,6 +1,7 @@
 package com.exwhythat.mobilization.ui.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -16,30 +17,31 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseView {
 
-    private ActivityComponent mActivityComponent;
+    private ActivityComponent activityComponent;
 
-    private Unbinder mUnbinder;
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivityComponent = DaggerActivityComponent.builder()
+        activityComponent = DaggerActivityComponent.builder()
                 .activityModule(new ActivityModule(this))
                 .build();
     }
 
     public void setUnbinder(Unbinder unbinder) {
-        mUnbinder = unbinder;
+        this.unbinder = unbinder;
     }
 
+    @NonNull
     public ActivityComponent getActivityComponent() {
-        return mActivityComponent;
+        return activityComponent;
     }
 
     @Override
     protected void onDestroy() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
+        if (unbinder != null) {
+            unbinder.unbind();
         }
         super.onDestroy();
     }

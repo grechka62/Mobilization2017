@@ -1,5 +1,7 @@
 package com.exwhythat.mobilization.di.component;
 
+import android.support.annotation.NonNull;
+
 import com.exwhythat.mobilization.di.module.ActivityModule;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.main.MainActivity;
@@ -14,8 +16,8 @@ import dagger.Component;
 
 @Component(modules = ActivityModule.class)
 public interface ActivityComponent {
-    void inject(MainActivity activity);
-    void inject(WeatherFragment fragment);
-    void inject(AboutFragment fragment);
-    void inject(SettingsFragment fragment);
+    void inject(@NonNull MainActivity activity);
+    void inject(@NonNull WeatherFragment fragment);
+    void inject(@NonNull AboutFragment fragment);
+    void inject(@NonNull SettingsFragment fragment);
 }

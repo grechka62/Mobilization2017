@@ -1,6 +1,7 @@
 package com.exwhythat.mobilization.di.module;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.exwhythat.mobilization.di.ActivityContext;
@@ -26,44 +27,50 @@ import dagger.Provides;
 
 @Module
 public class ActivityModule {
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
 
-    public ActivityModule(AppCompatActivity activity) {
-        mActivity = activity;
+    public ActivityModule(@NonNull AppCompatActivity activity) {
+        this.activity = activity;
     }
 
     @Provides
     @ActivityContext
+    @NonNull
     Context provideContext() {
-        return mActivity;
+        return activity;
     }
 
     @Provides
+    @NonNull
     AppCompatActivity provideActivity() {
-        return mActivity;
+        return activity;
     }
 
     @Provides
+    @NonNull
     MainPresenter<MainView> provideMainPresenter(
-            MainPresenterImpl<MainView> presenter) {
+            @NonNull MainPresenterImpl<MainView> presenter) {
         return presenter;
     }
 
     @Provides
+    @NonNull
     WeatherPresenter<WeatherView> provideWeatherPresenter(
-            WeatherPresenterImpl<WeatherView> presenter) {
+            @NonNull WeatherPresenterImpl<WeatherView> presenter) {
         return presenter;
     }
 
     @Provides
+    @NonNull
     SettingsPresenter<SettingsView> provideSettingsPresenter(
-            SettingsPresenterImpl<SettingsView> presenter) {
+            @NonNull SettingsPresenterImpl<SettingsView> presenter) {
         return presenter;
     }
 
     @Provides
+    @NonNull
     AboutPresenter<AboutView> provideAboutPresenter(
-            AboutPresenterImpl<AboutView> presenter) {
+            @NonNull AboutPresenterImpl<AboutView> presenter) {
         return presenter;
     }
 }

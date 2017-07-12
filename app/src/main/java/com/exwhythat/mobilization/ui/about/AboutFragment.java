@@ -2,7 +2,7 @@ package com.exwhythat.mobilization.ui.about;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +19,11 @@ public class AboutFragment extends BaseFragment implements AboutView {
     public static final String TAG = "AboutFragment";
 
     @Inject
-    AboutPresenterImpl<AboutView> mPresenter;
+    AboutPresenterImpl<AboutView> presenter;
 
     public AboutFragment() {}
 
+    @NonNull
     public static AboutFragment newInstance() {
         AboutFragment fragment = new AboutFragment();
         Bundle args = new Bundle();
@@ -39,7 +40,7 @@ public class AboutFragment extends BaseFragment implements AboutView {
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
-            mPresenter.onAttach(this);
+            presenter.onAttach(this);
         }
 
         return view;
@@ -47,7 +48,7 @@ public class AboutFragment extends BaseFragment implements AboutView {
 
     @Override
     public void onDestroyView() {
-        mPresenter.onDetach();
+        presenter.onDetach();
         super.onDestroyView();
     }
 }
