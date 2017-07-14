@@ -1,19 +1,19 @@
 package com.exwhythat.mobilization.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
@@ -21,6 +21,9 @@ import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.exwhythat.mobilization.ui.settings.SettingsFragment;
 import com.exwhythat.mobilization.ui.weather.WeatherFragment;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import javax.inject.Inject;
 
@@ -41,8 +44,15 @@ public class MainActivity extends BaseActivity
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    private ActionBarDrawerToggle drawerToggle;
 
-    private CharSequence title;
+    @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface FragmentCodes {
+        int WEATHER = 0;
+        int SETTINGS = 1;
+        int ABOUT = 2;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +64,18 @@ public class MainActivity extends BaseActivity
         initNavigationDrawer(toolbar);
         presenter.onAttach(this);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_placeholder, WeatherFragment.newInstance())
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_placeholder, WeatherFragment.newInstance(), WeatherFragment.TAG)
                     .commit();
         }
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -77,8 +88,15 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -109,8 +127,12 @@ public class MainActivity extends BaseActivity
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+            return;
+        }
+        if (isFragmentVisible(WeatherFragment.TAG)) {
             super.onBackPressed();
+        } else {
+            showWeather();
         }
     }
 
@@ -121,44 +143,127 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void showWeatherFragment() {
-        navigateToFragment(WeatherFragment.newInstance(), WeatherFragment.TAG, R.string.action_weather);
+    public void showWeather() {
+        showFragment(FragmentCodes.WEATHER);
     }
 
     @Override
-    public void showAboutFragment() {
-        navigateToFragment(AboutFragment.newInstance(), AboutFragment.TAG, R.string.action_about);
+    public void showAbout() {
+        showFragment(FragmentCodes.ABOUT);
     }
 
     @Override
-    public void showSettingsFragment() {
-        navigateToFragment(SettingsFragment.newInstance(), SettingsFragment.TAG, R.string.action_settings);
+    public void showSettings() {
+        showFragment(FragmentCodes.SETTINGS);
+    }
+
+    /**
+     * Awful navigation implementation, need to rework
+     */
+    private void showFragment(@FragmentCodes int fragmentCode) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        String tag;
+        BaseFragment newFragment;
+        int titleResId;
+
+        switch (fragmentCode) {
+            case FragmentCodes.WEATHER:
+                tag = WeatherFragment.TAG;
+                if (isFragmentVisible(tag)) {
+                    return;
+                }
+                newFragment = WeatherFragment.newInstance();
+                titleResId = R.string.action_weather;
+
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                break;
+            case FragmentCodes.SETTINGS:
+                tag = SettingsFragment.TAG;
+                if (isFragmentVisible(tag)) {
+                    return;
+                }
+                newFragment = SettingsFragment.newInstance();
+                titleResId = R.string.action_settings;
+                break;
+            case FragmentCodes.ABOUT:
+                tag = AboutFragment.TAG;
+                if (isFragmentVisible(tag)) {
+                    return;
+                }
+                newFragment = AboutFragment.newInstance();
+                titleResId = R.string.action_about;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported fragment code");
+        }
+
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if (fragmentCode != FragmentCodes.WEATHER) {
+            ft.addToBackStack(tag);
+        }
+        ft.setCustomAnimations(R.anim.slide_left, R.anim.slide_right, R.anim.slide_left, R.anim.slide_right);
+        ft.replace(R.id.fragment_placeholder, newFragment, tag);
+        ft.commit();
+
+        setTitle(getString(titleResId));
+
+        if (fragmentCode == FragmentCodes.WEATHER) {
+            showToolbarHamburger();
+            setDrawerEnabledState(true);
+        } else {
+            showToolbarArrow();
+            setDrawerEnabledState(false);
+        }
+    }
+
+    private void showToolbarHamburger() {
+        // Remove back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        // Show hamburger
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        // Remove the/any drawer toggle listener
+        drawerToggle.setToolbarNavigationClickListener(null);
+    }
+
+    private void showToolbarArrow() {
+        // Remove hamburger
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        // Show back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showWeather();
+            }
+        });
+    }
+
+    private void setDrawerEnabledState(boolean isEnabled) {
+        drawerLayout.setDrawerLockMode(isEnabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    private boolean isFragmentVisible(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int stackSize = fragmentManager.getBackStackEntryCount();
+        if (stackSize > 0) {
+            int lastIndex = stackSize - 1;
+            return (fragmentManager.getBackStackEntryAt(lastIndex).getName().equals(tag));
+        } else {
+            if (tag.equals(WeatherFragment.TAG)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
     public void setTitle(CharSequence title) {
-        this.title = title;
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
-            ab.setTitle(this.title);
+            ab.setTitle(title);
         }
-    }
-
-    private void navigateToFragment(BaseFragment fragment, String tag, @StringRes int titleResId) {
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment foundFragment = fm.findFragmentByTag(tag);
-        if (foundFragment != null) {
-            drawerLayout.closeDrawer(Gravity.START);
-            return;
-        }
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .disallowAddToBackStack()
-                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
-                .replace(R.id.fragment_placeholder, fragment, tag)
-                .commit();
-        setTitle(getString(titleResId));
     }
 }

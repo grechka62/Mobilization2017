@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 public class WeatherFragment extends BaseFragment implements WeatherView {
 
-    public static final String TAG = "WeatherFragment";
+    public static final String TAG = WeatherFragment.class.getCanonicalName();
 
     @Inject
     WeatherPresenter<WeatherView> presenter;

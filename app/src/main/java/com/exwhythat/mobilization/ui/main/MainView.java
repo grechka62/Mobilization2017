@@ -8,9 +8,9 @@ import com.exwhythat.mobilization.ui.base.BaseView;
 
 public interface MainView extends BaseView {
 
-    void showWeatherFragment();
+    void showWeather();
 
-    void showAboutFragment();
+    void showAbout();
 
-    void showSettingsFragment();
+    void showSettings();
 }

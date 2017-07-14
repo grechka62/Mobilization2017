@@ -21,7 +21,7 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
         // TODO: is it good practice or there is better way?.. (Except Kotlin, ofc).
         MainView view = getMvpView();
         if (view != null) {
-            view.showWeatherFragment();
+            view.showWeather();
         }
     }
 
@@ -29,7 +29,7 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
     public void onDrawerAboutClick() {
         MainView view = getMvpView();
         if (view != null) {
-            view.showAboutFragment();
+            view.showAbout();
         }
     }
 
@@ -37,7 +37,7 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
     public void onDrawerSettingsClick() {
         MainView view = getMvpView();
         if (view != null) {
-            view.showSettingsFragment();
+            view.showSettings();
         }
     }
 }

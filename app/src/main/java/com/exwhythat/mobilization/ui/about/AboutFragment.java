@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 public class AboutFragment extends BaseFragment implements AboutView {
 
-    public static final String TAG = "AboutFragment";
+    public static final String TAG = AboutFragment.class.getCanonicalName();
 
     @Inject
     AboutPresenterImpl<AboutView> presenter;
