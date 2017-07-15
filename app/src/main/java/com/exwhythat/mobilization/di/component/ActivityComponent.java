@@ -3,6 +3,7 @@ package com.exwhythat.mobilization.di.component;
 import android.support.annotation.NonNull;
 
 import com.exwhythat.mobilization.di.module.ActivityModule;
+import com.exwhythat.mobilization.di.module.PresenterModule;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.main.MainActivity;
 import com.exwhythat.mobilization.ui.weather.WeatherFragment;
@@ -14,7 +15,7 @@ import dagger.Component;
  * Created by exwhythat on 09.07.17.
  */
 
-@Component(modules = ActivityModule.class)
+@Component(modules = {ActivityModule.class, PresenterModule.class})
 public interface ActivityComponent {
     void inject(@NonNull MainActivity activity);
     void inject(@NonNull WeatherFragment fragment);

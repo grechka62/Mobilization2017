@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.di.component.DaggerActivityComponent;
 import com.exwhythat.mobilization.di.module.ActivityModule;
+import com.exwhythat.mobilization.di.module.PresenterModule;
 
 import butterknife.Unbinder;
 
@@ -26,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         super.onCreate(savedInstanceState);
         activityComponent = DaggerActivityComponent.builder()
                 .activityModule(new ActivityModule(this))
+                .presenterModule(new PresenterModule())
                 .build();
     }
 
