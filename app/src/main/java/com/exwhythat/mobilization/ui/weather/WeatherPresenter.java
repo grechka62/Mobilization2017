@@ -1,5 +1,6 @@
 package com.exwhythat.mobilization.ui.weather;
 
+import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BasePresenter;
 
 /**
@@ -7,4 +8,5 @@ import com.exwhythat.mobilization.ui.base.BasePresenter;
  */
 
 public interface WeatherPresenter<V extends WeatherView> extends BasePresenter<V> {
+    WeatherItem refreshData();
 }
