@@ -12,7 +12,7 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_weather_fragment">Hello weather fragment</string>
-    <string name="hello_settings_fragment">Hello settings fragment</string>
-    <string name="hello_about_fragment">Hello about fragment</string>
+    <string name="hello_weather_fragment" translatable="false">Hello weather fragment</string>
+    <string name="hello_settings_fragment" translatable="false">Hello settings fragment</string>
+    <string name="hello_about_fragment" translatable="false">Hello about fragment</string>
 </resources>
