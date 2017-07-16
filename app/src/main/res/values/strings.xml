@@ -7,6 +7,7 @@
     <string name="action_refresh">Refresh</string>
 
     <string name="error_unknown">Unknown error</string>
+    <string name="error_with_msg">Error! Msg: %1$s</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

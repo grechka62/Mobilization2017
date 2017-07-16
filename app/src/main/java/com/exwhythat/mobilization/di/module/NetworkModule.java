@@ -13,6 +13,8 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import repository.RemoteWeatherRepository;
+import repository.WeatherRepository;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -64,5 +66,11 @@ public class NetworkModule {
     @Singleton
     RestApi provideRestApi(Retrofit retrofit) {
         return retrofit.create(RestApi.class);
+    }
+
+    @Provides
+    @Singleton
+    WeatherRepository provideRemoteWeatherRepository(RestApi restApi) {
+        return new RemoteWeatherRepository(restApi);
     }
 }

@@ -1,15 +1,64 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_normal"
     tools:context="com.exwhythat.mobilization.ui.settings.SettingsFragment">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/hello_settings_fragment"
-        android:textSize="40sp"/>
+        android:text="Weather update interval"
+        android:textSize="@dimen/text_big"/>
 
-</FrameLayout>
+    <RadioGroup
+        android:id="@+id/rgUpdateInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb1s"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 second" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb10s"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 seconds" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb1m"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 minute" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb10m"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 minutes" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb30m"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30 minutes" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb1h"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 hour" />
+    </RadioGroup>
+
+</LinearLayout>

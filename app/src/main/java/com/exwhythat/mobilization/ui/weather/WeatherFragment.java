@@ -1,6 +1,7 @@
 package com.exwhythat.mobilization.ui.weather;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,8 +26,10 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import util.Prefs;
 
-public class WeatherFragment extends BaseFragment implements WeatherView {
+public class WeatherFragment extends BaseFragment implements WeatherView,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String TAG = WeatherFragment.class.getCanonicalName();
 
@@ -79,11 +82,25 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
 
         btnRefresh = ButterKnife.findById(view, R.id.btnRefreshData);
         if (btnRefresh != null) {
-            btnRefresh.setOnClickListener(view2 -> presenter.refreshData());
+            btnRefresh.setOnClickListener(view2 -> presenter.onRefreshData());
         }
         pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
         tvResult = ButterKnife.findById(view, R.id.tvResult);
         tvError = ButterKnife.findById(view, R.id.tvError);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences weatherPrefs = Prefs.getWeatherDataPrefs(getContext());
+        weatherPrefs.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences weatherPrefs = Prefs.getWeatherDataPrefs(getContext());
+        weatherPrefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -122,10 +139,18 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
     }
 
     @Override
-    public void showError() {
+    public void showError(Throwable throwable) {
+        String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
+        tvError.setText(errorText);
+
         tvResult.setVisibility(View.GONE);
         pbLoading.setVisibility(View.GONE);
         btnRefresh.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        presenter.onPrefsChanged();
     }
 }

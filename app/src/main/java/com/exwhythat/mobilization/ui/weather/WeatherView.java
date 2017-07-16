@@ -15,5 +15,5 @@ public interface WeatherView extends BaseView {
 
     void showResult(WeatherItem item);
 
-    void showError();
+    void showError(Throwable throwable);
 }
