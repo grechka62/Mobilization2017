@@ -92,14 +92,14 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences weatherPrefs = Prefs.getWeatherDataPrefs(getContext());
+        SharedPreferences weatherPrefs = Prefs.getDataPrefs(getContext());
         weatherPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        SharedPreferences weatherPrefs = Prefs.getWeatherDataPrefs(getContext());
+        SharedPreferences weatherPrefs = Prefs.getDataPrefs(getContext());
         weatherPrefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 

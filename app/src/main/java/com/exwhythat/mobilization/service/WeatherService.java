@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
@@ -22,8 +21,7 @@ import com.exwhythat.mobilization.network.response.WeatherResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.reactivestreams.Publisher;
-
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -32,7 +30,6 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import util.Constants;
@@ -57,8 +54,7 @@ public class WeatherService extends Service implements SharedPreferences.OnShare
     @Inject
     RestApi restApi;
 
-    @Inject
-    SharedPreferences prefs;
+    private SharedPreferences settingsPrefs;
 
     private Disposable disposable;
 
@@ -70,7 +66,8 @@ public class WeatherService extends Service implements SharedPreferences.OnShare
                 .build();
         component.inject(this);
 
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        settingsPrefs = Prefs.getSettingsPrefs(getApplicationContext());
+        settingsPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -109,6 +106,12 @@ public class WeatherService extends Service implements SharedPreferences.OnShare
         String json = gson.toJson(weatherResponseSingle.blockingGet());
         Prefs.putWeatherData(appContext, json);
 
+        // Trigger prefs change listener even if unchanged, just to demonstrate result
+        Prefs.getDataPrefs(appContext)
+                .edit()
+                .putLong("temporaryPref", new Date().getTime())
+                .apply();
+
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> Toast.makeText(this, "Tick!", Toast.LENGTH_SHORT).show());
     }
@@ -122,7 +125,7 @@ public class WeatherService extends Service implements SharedPreferences.OnShare
         if (disposable != null) {
             disposable.dispose();
         }
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
+        settingsPrefs.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
 
@@ -134,7 +137,7 @@ public class WeatherService extends Service implements SharedPreferences.OnShare
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (Prefs.KEY_SETTING_UPDATE_INTERVAL.equals(key)) {
+        if (Prefs.KEY_SETTINGS_UPDATE_INTERVAL.equals(key)) {
             // TODO: is there better way to update interval?
             stopSelf();
             startService(new Intent(this, WeatherService.class));

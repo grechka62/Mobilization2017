@@ -86,6 +86,31 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
                     break;
             }
         });
+
+        int interval = Prefs.getSettingsUpdateInterval(getContext());
+        switch (interval) {
+            case 1:
+                rgUpdateInterval.check(R.id.rb1s);
+                break;
+            case 10:
+                rgUpdateInterval.check(R.id.rb10s);
+                break;
+            case 60:
+                rgUpdateInterval.check(R.id.rb1m);
+                break;
+            case 60*10:
+                rgUpdateInterval.check(R.id.rb10m);
+                break;
+            case 60*30:
+                rgUpdateInterval.check(R.id.rb30m);
+                break;
+            case 60*60:
+                rgUpdateInterval.check(R.id.rb1h);
+                break;
+            default:
+                rgUpdateInterval.check(R.id.rb10s);
+                break;
+        }
     }
 
     @Override
