@@ -2,7 +2,7 @@ package com.exwhythat.mobilization.di.component;
 
 import com.exwhythat.mobilization.di.module.AppModule;
 import com.exwhythat.mobilization.di.module.NetworkModule;
-import com.exwhythat.mobilization.service.WeatherService;
+import com.exwhythat.mobilization.alarm.WeatherService;
 
 import javax.inject.Singleton;
 

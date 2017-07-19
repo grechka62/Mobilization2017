@@ -26,7 +26,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import util.Prefs;
+import util.DataPrefs;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -92,14 +92,14 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences weatherPrefs = Prefs.getDataPrefs(getContext());
+        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
         weatherPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        SharedPreferences weatherPrefs = Prefs.getDataPrefs(getContext());
+        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
         weatherPrefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
