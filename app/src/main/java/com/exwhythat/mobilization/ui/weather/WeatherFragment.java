@@ -90,6 +90,12 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.action_weather);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
