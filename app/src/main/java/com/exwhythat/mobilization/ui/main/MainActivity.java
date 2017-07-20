@@ -1,7 +1,5 @@
 package com.exwhythat.mobilization.ui.main;
 
-import android.app.IntentService;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -18,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.service.WeatherService;
+import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
@@ -73,7 +71,7 @@ public class MainActivity extends BaseActivity
                     .commit();
         }
 
-        startService(new Intent(this, WeatherService.class));
+        WeatherAlarm.setAlarm(this);
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {

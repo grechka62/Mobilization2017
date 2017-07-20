@@ -2,24 +2,22 @@ package com.exwhythat.mobilization.ui.settings;
 
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
+import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import util.Prefs;
+import util.SettingPrefs;
 
 
 public class SettingsFragment extends BaseFragment implements SettingsView {
@@ -65,29 +63,35 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
         rgUpdateInterval.setOnCheckedChangeListener((radioGroup, idChecked) -> {
             switch (idChecked) {
                 case R.id.rb1s:
-                    Prefs.putSettingsUpdateInterval(getContext(), 1);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 1);
+                    WeatherAlarm.setAlarm(getContext(), 1);
                     break;
                 case R.id.rb10s:
-                    Prefs.putSettingsUpdateInterval(getContext(), 10);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 10);
+                    WeatherAlarm.setAlarm(getContext(), 10);
                     break;
                 case R.id.rb1m:
-                    Prefs.putSettingsUpdateInterval(getContext(), 60);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 60);
+                    WeatherAlarm.setAlarm(getContext(), 60);
                     break;
                 case R.id.rb10m:
-                    Prefs.putSettingsUpdateInterval(getContext(), 60 * 10);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 60 * 10);
+                    WeatherAlarm.setAlarm(getContext(), 60 * 10);
                     break;
                 case R.id.rb30m:
-                    Prefs.putSettingsUpdateInterval(getContext(), 60 * 30);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 60 * 30);
+                    WeatherAlarm.setAlarm(getContext(), 60 * 30);
                     break;
                 case R.id.rb1h:
-                    Prefs.putSettingsUpdateInterval(getContext(), 60 * 60);
+                    SettingPrefs.putSettingsUpdateInterval(getContext(), 60 * 60);
+                    WeatherAlarm.setAlarm(getContext(), 60 * 60);
                     break;
                 default:
                     break;
             }
         });
 
-        int interval = Prefs.getSettingsUpdateInterval(getContext());
+        int interval = SettingPrefs.getSettingsUpdateInterval(getContext());
         switch (interval) {
             case 1:
                 rgUpdateInterval.check(R.id.rb1s);

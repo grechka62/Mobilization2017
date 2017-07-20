@@ -3,6 +3,7 @@
     package="com.exwhythat.mobilization">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".App"
@@ -23,7 +24,17 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.WeatherService"
+        <service android:name=".alarm.WeatherService"
             android:exported="false"/>
+
+        <receiver android:name=".alarm.WeatherAlarmReceiver"
+            android:enabled="true"/>
+
+        <receiver android:name=".alarm.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
