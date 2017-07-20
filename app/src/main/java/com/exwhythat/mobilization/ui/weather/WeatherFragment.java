@@ -26,7 +26,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import util.DataPrefs;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
         SharedPreferences.OnSharedPreferenceChangeListener {

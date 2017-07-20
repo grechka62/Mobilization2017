@@ -1,4 +1,4 @@
-package util;
+package com.exwhythat.mobilization.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

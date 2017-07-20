@@ -1,4 +1,4 @@
-package repository;
+package com.exwhythat.mobilization.repository;
 
 import android.content.Context;
 
@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import javax.inject.Inject;
 
 import io.reactivex.Single;
-import util.DataPrefs;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 /**
  * Created by exwhythat on 16.07.17.

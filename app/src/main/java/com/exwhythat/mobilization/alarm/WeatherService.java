@@ -27,9 +27,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
-import util.Constants;
-import util.DataPrefs;
-import util.SettingPrefs;
+import com.exwhythat.mobilization.util.Constants;
+import com.exwhythat.mobilization.util.DataPrefs;
+import com.exwhythat.mobilization.util.SettingPrefs;
 
 /**
  * Created by exwhythat on 15.07.17.

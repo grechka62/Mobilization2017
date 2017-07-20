@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-import util.SettingPrefs;
+import com.exwhythat.mobilization.util.SettingPrefs;
 
 /**
  * Class, which simplifies weather update scheduling

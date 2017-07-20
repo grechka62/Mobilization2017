@@ -17,7 +17,7 @@ import com.exwhythat.mobilization.ui.base.BaseFragment;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import util.SettingPrefs;
+import com.exwhythat.mobilization.util.SettingPrefs;
 
 
 public class SettingsFragment extends BaseFragment implements SettingsView {
