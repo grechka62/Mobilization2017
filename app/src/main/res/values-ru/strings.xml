@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Погода</string>
 
+    <string name="action_weather">Погода</string>
     <string name="action_settings">Настройки</string>
     <string name="action_about">О программе</string>
+    <string name="action_refresh">Обновить</string>
+
+    <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="error_with_msg">Ошибка! Причина: %1$s</string>
 </resources>

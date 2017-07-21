@@ -1,5 +1,7 @@
 package com.exwhythat.mobilization.di.component;
 
+import android.support.annotation.NonNull;
+
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.di.module.AppModule;
 
@@ -14,5 +16,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-    void inject (App app);
+    void inject (@NonNull App app);
 }

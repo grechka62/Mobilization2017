@@ -17,8 +17,27 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
     }
 
     @Override
-    public void onSomeActionFromActivity() {
-        //TODO some logic goes here
-        getMvpView().someViewAction();
+    public void onDrawerWeatherClick() {
+        // TODO: is it good practice or there is better way?.. (Except Kotlin, ofc).
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showWeather();
+        }
+    }
+
+    @Override
+    public void onDrawerAboutClick() {
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showAbout();
+        }
+    }
+
+    @Override
+    public void onDrawerSettingsClick() {
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showSettings();
+        }
     }
 }

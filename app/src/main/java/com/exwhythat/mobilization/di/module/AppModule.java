@@ -2,6 +2,9 @@ package com.exwhythat.mobilization.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.exwhythat.mobilization.di.ApplicationContext;
 
@@ -15,20 +18,28 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-    private final Application mApplication;
+    private final Application application;
 
-    public AppModule(Application appContext) {
-        mApplication = appContext;
+    public AppModule(@NonNull Application appContext) {
+        application = appContext;
     }
 
     @Provides
     @ApplicationContext
+    @NonNull
     Context provideContext() {
-        return mApplication;
+        return application;
     }
 
     @Provides
+    @NonNull
     Application provideApplication() {
-        return mApplication;
+        return application;
+    }
+
+    @Provides
+    @NonNull
+    SharedPreferences provideDefaultPreferences(@ApplicationContext Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }

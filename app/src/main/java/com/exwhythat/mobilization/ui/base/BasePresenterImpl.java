@@ -1,5 +1,7 @@
 package com.exwhythat.mobilization.ui.base;
 
+import android.support.annotation.Nullable;
+
 import javax.inject.Inject;
 
 /**
@@ -7,7 +9,8 @@ import javax.inject.Inject;
  */
 
 public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V> {
-    private V mView;
+
+    private V mvpView;
 
     @Inject
     public BasePresenterImpl() {
@@ -15,15 +18,16 @@ public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V> {
 
     @Override
     public void onAttach(V view) {
-        mView = view;
+        mvpView = view;
     }
 
     @Override
     public void onDetach() {
-        mView = null;
+        mvpView = null;
     }
 
+    @Nullable
     public V getMvpView() {
-        return mView;
+        return mvpView;
     }
 }
