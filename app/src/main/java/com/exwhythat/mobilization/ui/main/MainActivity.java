@@ -120,8 +120,8 @@ public class MainActivity extends BaseActivity
 
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                //TODO delegate to WeatherFragment (through the model?)
-                return true;
+                // Delegate to WeatherFragment
+                return false;
             case android.R.id.home:
                 onBackPressed();
                 return true;

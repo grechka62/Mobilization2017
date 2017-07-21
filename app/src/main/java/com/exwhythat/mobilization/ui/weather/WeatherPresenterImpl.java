@@ -35,23 +35,26 @@ public class WeatherPresenterImpl<V extends WeatherView> extends BasePresenterIm
     }
 
     @Override
+    public void onAttach(V view) {
+        super.onAttach(view);
+        getMvpView().showLoading();
+        showDataFromWeatherRepo(localRepo);
+    }
+
+    @Override
     public void onRefreshData() {
         getMvpView().showLoading();
-
-        Single<WeatherItem> currentWeatherSingle = remoteRepo.getCurrentWeather();
-
-        disposable.dispose();
-        disposable = currentWeatherSingle
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccess, this::onError);
+        showDataFromWeatherRepo(remoteRepo);
     }
 
     @Override
     public void onPrefsChanged() {
         getMvpView().showLoading();
+        showDataFromWeatherRepo(localRepo);
+    }
 
-        Single<WeatherItem> currentWeatherSingle = localRepo.getCurrentWeather();
+    private void showDataFromWeatherRepo(WeatherRepository weatherRepo) {
+        Single<WeatherItem> currentWeatherSingle = weatherRepo.getCurrentWeather();
 
         disposable.dispose();
         disposable = currentWeatherSingle
