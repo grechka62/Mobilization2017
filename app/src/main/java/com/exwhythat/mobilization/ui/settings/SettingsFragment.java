@@ -49,7 +49,6 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
-            presenter.onAttach(this);
         }
 
         return view;
@@ -91,6 +90,12 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
         });
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.action_settings);
+    }
+
     private void saveNewIntervalAndSetAlarm(@UpdateInterval int newInterval) {
         Context context = getContext();
         SettingPrefs.putSettingsUpdateInterval(context, newInterval);
@@ -122,12 +127,6 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
                 rg.check(R.id.rb10s);
                 break;
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_settings);
     }
 
     @Override

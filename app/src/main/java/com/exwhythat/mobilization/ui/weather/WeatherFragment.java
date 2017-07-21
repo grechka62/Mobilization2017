@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +38,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
     private ProgressBar pbLoading;
 
-    private Button btnRefresh;
-
     private TextView tvResult;
     private TextView tvError;
 
@@ -58,18 +56,17 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
         ActivityComponent component = getActivityComponent();
         if (component != null) {
             component.inject(this);
-            presenter.onAttach(this);
         }
 
         return view;
@@ -80,10 +77,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         super.onViewCreated(view, savedInstanceState);
         Toast.makeText(getContext(), "View created!", Toast.LENGTH_SHORT).show();
 
-        btnRefresh = ButterKnife.findById(view, R.id.btnRefreshData);
-        if (btnRefresh != null) {
-            btnRefresh.setOnClickListener(view2 -> presenter.onRefreshData());
-        }
         pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
         tvResult = ButterKnife.findById(view, R.id.tvResult);
         tvError = ButterKnife.findById(view, R.id.tvError);
@@ -93,6 +86,18 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(R.string.action_weather);
+        presenter.onAttach(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                presenter.onRefreshData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -119,7 +124,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     public void showLoading() {
         tvResult.setVisibility(View.GONE);
         pbLoading.setVisibility(View.VISIBLE);
-        btnRefresh.setVisibility(View.GONE);
         tvError.setVisibility(View.GONE);
     }
 
@@ -140,7 +144,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
         tvResult.setVisibility(View.VISIBLE);
         pbLoading.setVisibility(View.GONE);
-        btnRefresh.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.GONE);
     }
 
@@ -151,7 +154,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
         tvResult.setVisibility(View.GONE);
         pbLoading.setVisibility(View.GONE);
-        btnRefresh.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.VISIBLE);
     }
 

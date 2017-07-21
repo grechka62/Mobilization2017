@@ -18,6 +18,9 @@ public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V> {
 
     @Override
     public void onAttach(V view) {
+        if (mvpView != null) {
+            throw new IllegalStateException("MvpView is not null in onAttach! Check the view was properly detached");
+        }
         mvpView = view;
     }
 
