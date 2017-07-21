@@ -1,4 +1,4 @@
-package repository;
+package com.exwhythat.mobilization.repository;
 
 import com.exwhythat.mobilization.model.WeatherItem;
 

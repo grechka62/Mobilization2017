@@ -26,7 +26,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import util.DataPrefs;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -87,6 +87,12 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
         tvResult = ButterKnife.findById(view, R.id.tvResult);
         tvError = ButterKnife.findById(view, R.id.tvError);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.action_weather);
     }
 
     @Override

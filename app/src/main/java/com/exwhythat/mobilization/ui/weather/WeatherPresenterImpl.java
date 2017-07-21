@@ -1,10 +1,9 @@
 package com.exwhythat.mobilization.ui.weather;
 
-import repository.LocalWeatherRepository;
-import repository.RemoteWeatherRepository;
+import com.exwhythat.mobilization.repository.LocalWeatherRepository;
+import com.exwhythat.mobilization.repository.RemoteWeatherRepository;
 
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.network.RestApi;
 import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
 
 import javax.inject.Inject;
@@ -14,7 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import repository.WeatherRepository;
+import com.exwhythat.mobilization.repository.WeatherRepository;
 
 /**
  * Created by exwhythat on 11.07.17.
