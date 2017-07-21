@@ -3,6 +3,8 @@ package com.exwhythat.mobilization.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import timber.log.Timber;
+
 /**
  * Helper class for data preferences
  */
@@ -21,6 +23,7 @@ public class DataPrefs {
         prefs.edit()
                 .putString(KEY_WEATHER_DATA, jsonData)
                 .apply();
+        Timber.d("New weather data has been written into SharedPreferences: " + jsonData);
     }
 
     public static String getWeatherDataAsJsonString(Context context) {
