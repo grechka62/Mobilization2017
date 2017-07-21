@@ -1,4 +1,4 @@
-package repository;
+package com.exwhythat.mobilization.repository;
 
 import android.content.Context;
 
@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import javax.inject.Inject;
 
 import io.reactivex.Single;
-import util.Prefs;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 /**
  * Created by exwhythat on 16.07.17.
@@ -31,7 +31,7 @@ public class LocalWeatherRepository implements WeatherRepository{
 
     @Override
     public Single<WeatherItem> getCurrentWeather() {
-        String jsonWeatherData = Prefs.getWeatherDataAsJsonString(context);
+        String jsonWeatherData = DataPrefs.getWeatherDataAsJsonString(context);
 
         Gson gson = new GsonBuilder().create();
         Type jsonType = new TypeToken<WeatherResponse>(){}.getType();

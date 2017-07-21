@@ -1,4 +1,4 @@
-package util;
+package com.exwhythat.mobilization.util;
 
 /**
  * Created by exwhythat on 15.07.17.
