@@ -13,4 +13,6 @@ public interface MainView extends BaseView {
     void showAbout();
 
     void showSettings();
+
+    void showCitySelection();
 }

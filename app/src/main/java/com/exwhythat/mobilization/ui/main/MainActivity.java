@@ -21,6 +21,7 @@ import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.ui.citySelection.CitySelectionFragment;
 import com.exwhythat.mobilization.ui.settings.SettingsFragment;
 import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 
@@ -52,12 +53,13 @@ public class MainActivity extends BaseActivity
 
     private boolean isHomeAsUp = false;
 
-    @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT})
+    @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT, FragmentCodes.CITY_SELECTION})
     @Retention(RetentionPolicy.SOURCE)
     private @interface FragmentCodes {
         int WEATHER = 0;
         int SETTINGS = 1;
         int ABOUT = 2;
+        int CITY_SELECTION = 3;
     }
 
     @Override
@@ -142,6 +144,9 @@ public class MainActivity extends BaseActivity
             case R.id.nav_about:
                 presenter.onDrawerAboutClick();
                 break;
+            case R.id.nav_city_selection:
+                presenter.onDrawerCitySelectionClick();
+                break;
             default:
                 throw new IllegalStateException("Navigation drawer undeclared item");
         }
@@ -184,6 +189,11 @@ public class MainActivity extends BaseActivity
         showFragment(FragmentCodes.SETTINGS);
     }
 
+    @Override
+    public void showCitySelection() {
+        showFragment(FragmentCodes.CITY_SELECTION);
+    }
+
     /**
      * Awful navigation implementation, need to rework
      */
@@ -217,6 +227,13 @@ public class MainActivity extends BaseActivity
                     return;
                 }
                 newFragment = AboutFragment.newInstance();
+                break;
+            case FragmentCodes.CITY_SELECTION:
+                tag = CitySelectionFragment.TAG;
+                if (isFragmentVisible(tag)) {
+                    return;
+                }
+                newFragment = CitySelectionFragment.newInstance();
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported fragment code");

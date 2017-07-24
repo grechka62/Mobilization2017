@@ -40,4 +40,12 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
             view.showSettings();
         }
     }
+
+    @Override
+    public void onDrawerCitySelectionClick() {
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showCitySelection();
+        }
+    }
 }
