@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.exwhythat.mobilization.di.ActivityContext;
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.network.response.WeatherResponse;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
