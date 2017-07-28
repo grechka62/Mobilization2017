@@ -110,7 +110,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void showCitySuggest(Prediction suggest) {
         suggestAdapter.add(suggest);
         if (suggestAdapter.getItemCount() == 5) {
-            //loading.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
             suggestList.setAdapter(suggestAdapter);
             suggestList.setVisibility(View.VISIBLE);
         }
@@ -124,9 +124,9 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     @Override
     public void showLoading() {
-        /*suggestList.setVisibility(View.GONE);
         hint.setVisibility(View.GONE);
-        loading.setVisibility(View.VISIBLE);*/
+        suggestList.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);
     }
 
     @Override

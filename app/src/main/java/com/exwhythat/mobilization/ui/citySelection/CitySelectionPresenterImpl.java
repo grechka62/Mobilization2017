@@ -40,7 +40,9 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
 
     @Override
     public void onTextChanges(Observable<CharSequence> input) {
-        inputObserve = input.subscribe(this::getCitySuggest);
+        inputObserve = input
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::getCitySuggest);
     }
 
     public void getCitySuggest(CharSequence input) {
