@@ -1,12 +1,12 @@
-package com.exwhythat.mobilization.network.response;
+package com.exwhythat.mobilization.network.weatherResponse;
 
-import com.exwhythat.mobilization.network.response.part.Clouds;
-import com.exwhythat.mobilization.network.response.part.Coord;
-import com.exwhythat.mobilization.network.response.part.Main;
-import com.exwhythat.mobilization.network.response.part.Rain;
-import com.exwhythat.mobilization.network.response.part.Sys;
-import com.exwhythat.mobilization.network.response.part.Weather;
-import com.exwhythat.mobilization.network.response.part.Wind;
+import com.exwhythat.mobilization.network.weatherResponse.part.Clouds;
+import com.exwhythat.mobilization.network.weatherResponse.part.Coord;
+import com.exwhythat.mobilization.network.weatherResponse.part.Main;
+import com.exwhythat.mobilization.network.weatherResponse.part.Rain;
+import com.exwhythat.mobilization.network.weatherResponse.part.Sys;
+import com.exwhythat.mobilization.network.weatherResponse.part.Weather;
+import com.exwhythat.mobilization.network.weatherResponse.part.Wind;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -46,13 +46,13 @@ public class WeatherResponse {
     private Sys sys;
     @SerializedName("id")
     @Expose
-    private Integer cityId;
+    private int cityId;
     @SerializedName("name")
     @Expose
     private String cityName;
     @SerializedName("cod")
     @Expose
-    private Integer cod;
+    private int cod;
 
     public Main getMain() {
         return main;
