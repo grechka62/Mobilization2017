@@ -14,8 +14,10 @@ import com.exwhythat.mobilization.di.component.DaggerServiceComponent;
 import com.exwhythat.mobilization.di.component.ServiceComponent;
 import com.exwhythat.mobilization.di.module.AppModule;
 import com.exwhythat.mobilization.di.module.NetworkModule;
-import com.exwhythat.mobilization.network.RestApi;
-import com.exwhythat.mobilization.network.response.WeatherResponse;
+import com.exwhythat.mobilization.network.WeatherApi;
+import com.exwhythat.mobilization.network.cityResponse.part.Location;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
+import com.exwhythat.mobilization.util.CityPrefs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -42,7 +44,7 @@ public class WeatherService extends Service {
     Context appContext;
 
     @Inject
-    RestApi restApi;
+    WeatherApi weatherApi;
 
     private Disposable disposable;
 
@@ -59,7 +61,9 @@ public class WeatherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        disposable = restApi.getWeatherForCity(Constants.CityIds.MOSCOW, Constants.Units.METRIC)
+        Location location = CityPrefs.getCity(appContext).getLocation();
+        disposable = weatherApi.getWeatherForCity(location.getLat(), location.getLng(),
+                Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onSuccess, this::onError);

@@ -4,12 +4,17 @@ import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 /**
  * Created by exwhythat on 07.07.17.
  */
 
 public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
         implements MainPresenter<V> {
+
+    private Disposable disposable = new CompositeDisposable();
 
     @Inject
     public MainPresenterImpl() {
@@ -47,5 +52,11 @@ public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
         if (view != null) {
             view.showCitySelection();
         }
+    }
+
+    @Override
+    public void onDetach() {
+        disposable.dispose();
+        super.onDetach();
     }
 }

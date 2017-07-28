@@ -8,8 +8,8 @@ import com.exwhythat.mobilization.di.module.PresenterModule;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.citySelection.CitySelectionFragment;
 import com.exwhythat.mobilization.ui.main.MainActivity;
-import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 import com.exwhythat.mobilization.ui.settings.SettingsFragment;
+import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 
 import javax.inject.Singleton;
 

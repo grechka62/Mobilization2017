@@ -1,0 +1,17 @@
+
+package com.exwhythat.mobilization.network.cityResponse;
+
+import com.exwhythat.mobilization.network.cityResponse.part.Result;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class CityResponse {
+
+    @SerializedName("result")
+    @Expose
+    private Result result;
+
+    public Result getResult() {
+        return result;
+    }
+}

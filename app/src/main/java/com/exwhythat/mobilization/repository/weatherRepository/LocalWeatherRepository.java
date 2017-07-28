@@ -1,9 +1,10 @@
-package com.exwhythat.mobilization.repository;
+package com.exwhythat.mobilization.repository.weatherRepository;
 
 import android.content.Context;
 
 import com.exwhythat.mobilization.di.ActivityContext;
 import com.exwhythat.mobilization.model.WeatherItem;
+import com.exwhythat.mobilization.network.cityResponse.part.Location;
 import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,7 +21,7 @@ import com.exwhythat.mobilization.util.DataPrefs;
  * Created by exwhythat on 16.07.17.
  */
 
-public class LocalWeatherRepository implements WeatherRepository{
+public class LocalWeatherRepository implements WeatherRepository {
 
     private Context context;
 
@@ -30,7 +31,7 @@ public class LocalWeatherRepository implements WeatherRepository{
     }
 
     @Override
-    public Single<WeatherItem> getCurrentWeather() {
+    public Single<WeatherItem> getCurrentWeather(Location location) {
         String jsonWeatherData = DataPrefs.getWeatherDataAsJsonString(context);
 
         Gson gson = new GsonBuilder().create();

@@ -1,5 +1,7 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
+import com.exwhythat.mobilization.model.CityInfo;
+import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseView;
 
 /**
@@ -7,4 +9,8 @@ import com.exwhythat.mobilization.ui.base.BaseView;
  */
 
 public interface CitySelectionView extends BaseView {
+
+    void clearSuggestions();
+    void showCitySuggest(Prediction suggest);
+    void saveNewCity(CityInfo cityInfo);
 }

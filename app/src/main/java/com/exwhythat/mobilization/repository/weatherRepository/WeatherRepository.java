@@ -1,6 +1,7 @@
-package com.exwhythat.mobilization.repository;
+package com.exwhythat.mobilization.repository.weatherRepository;
 
 import com.exwhythat.mobilization.model.WeatherItem;
+import com.exwhythat.mobilization.network.cityResponse.part.Location;
 
 import io.reactivex.Single;
 
@@ -10,5 +11,5 @@ import io.reactivex.Single;
 
 public interface WeatherRepository {
 
-    Single<WeatherItem> getCurrentWeather();
+    Single<WeatherItem> getCurrentWeather(Location location);
 }

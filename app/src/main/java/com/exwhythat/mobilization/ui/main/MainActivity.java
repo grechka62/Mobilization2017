@@ -32,12 +32,16 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Inject
     MainPresenter<MainView> presenter;
+
+    private Disposable disposable = new CompositeDisposable();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -75,6 +79,7 @@ public class MainActivity extends BaseActivity
         fm.addOnBackStackChangedListener(this);
 
         presenter.onAttach(this);
+
         if (savedInstanceState == null) {
             fm.beginTransaction()
                     .add(R.id.fragment_placeholder, WeatherFragment.newInstance(), WeatherFragment.TAG)
@@ -171,6 +176,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         presenter.onDetach();
+        disposable.dispose();
         super.onDestroy();
     }
 

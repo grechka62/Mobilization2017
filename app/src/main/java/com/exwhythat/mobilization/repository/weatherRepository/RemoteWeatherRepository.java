@@ -1,7 +1,8 @@
-package com.exwhythat.mobilization.repository;
+package com.exwhythat.mobilization.repository.weatherRepository;
 
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.network.WeatherApi;
+import com.exwhythat.mobilization.network.cityResponse.part.Location;
 import com.exwhythat.mobilization.util.Constants;
 
 import javax.inject.Inject;
@@ -22,9 +23,10 @@ public class RemoteWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public Single<WeatherItem> getCurrentWeather() {
+    public Single<WeatherItem> getCurrentWeather(Location location) {
         return weatherApi
-                .getWeatherForCity(Constants.CityIds.MOSCOW, Constants.Units.METRIC)
+                .getWeatherForCity(location.getLat(), location.getLng(),
+                        Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE)
                 .map(WeatherItem::new);
     }
 }
