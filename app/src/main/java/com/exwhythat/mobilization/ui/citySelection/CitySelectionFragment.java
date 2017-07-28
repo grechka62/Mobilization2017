@@ -1,29 +1,22 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.alarm.WeatherService;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.model.CityInfo;
 import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
-import com.exwhythat.mobilization.ui.main.MainActivity;
-import com.exwhythat.mobilization.util.CityPrefs;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
@@ -87,7 +80,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
         suggestList.setAdapter(suggestAdapter);
         suggestAdapter.setListener(this);
 
-        presenter.observeInput(RxTextView.textChanges(editCity)
+        presenter.onTextChanges(RxTextView.textChanges(editCity)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .filter(text -> text.length() > 0));
     }
@@ -121,14 +114,11 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onClick(View view) {
         placeId = view.findViewById(R.id.place_id);
-        presenter.getCityInfo(placeId.getText());
+        presenter.onSuggestClick(placeId.getText());
     }
 
     @Override
-    public void saveNewCity(CityInfo cityInfo) {
-        CityPrefs.putCity(getContext(), cityInfo);
-        Intent newIntent = new Intent(getContext(), WeatherService.class);
-        getContext().startService(newIntent);
+    public void showWeather(CityInfo cityInfo) {
         getActivity().onBackPressed();
     }
 

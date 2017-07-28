@@ -4,7 +4,6 @@ import com.exwhythat.mobilization.model.CityInfo;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
 import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
-import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
 
 import javax.inject.Inject;
 
@@ -38,4 +37,10 @@ public class RemoteCityRepository implements CityRepository {
                 .getCityInfo(placeId, CityApi.CITY_API_KEY_VALUE)
                 .map(CityInfo::new);
     }
+
+    @Override
+    public void putCity(CityInfo city) {}
+
+    @Override
+    public void updateWeather() {}
 }

@@ -12,6 +12,6 @@ public interface CitySelectionView extends BaseView {
 
     void clearSuggestions();
     void showCitySuggest(Prediction suggest);
-    void saveNewCity(CityInfo cityInfo);
+    void showWeather(CityInfo cityInfo);
     void showError(Throwable throwable);
 }
