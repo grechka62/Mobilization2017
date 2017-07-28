@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
-import com.exwhythat.mobilization.model.CityInfo;
 import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -38,7 +38,8 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     private EditText editCity;
     private TextView placeId;
-    private View view;
+    private TextView hint;
+    private ProgressBar loading;
 
     private RecyclerView suggestList;
     private CitySelectionAdapter suggestAdapter;
@@ -58,7 +59,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_city_selection, container, false);
+        View view = inflater.inflate(R.layout.fragment_city_selection, container, false);
 
         ActivityComponent component = getActivityComponent();
         if (component != null) {
@@ -74,6 +75,8 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
         editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
+        hint = ButterKnife.findById(view, R.id.city_input_hint);
+        loading = ButterKnife.findById(view, R.id.loading_suggest);
 
         suggestAdapter = new CitySelectionAdapter();
         suggestList.setLayoutManager(layoutManager);
@@ -107,7 +110,9 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void showCitySuggest(Prediction suggest) {
         suggestAdapter.add(suggest);
         if (suggestAdapter.getItemCount() == 5) {
+            //loading.setVisibility(View.GONE);
             suggestList.setAdapter(suggestAdapter);
+            suggestList.setVisibility(View.VISIBLE);
         }
     }
 
@@ -118,12 +123,20 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     }
 
     @Override
-    public void showWeather(CityInfo cityInfo) {
+    public void showLoading() {
+        /*suggestList.setVisibility(View.GONE);
+        hint.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);*/
+    }
+
+    @Override
+    public void showWeather() {
         getActivity().onBackPressed();
     }
 
     @Override
     public void showError(Throwable throwable) {
+        hint.setVisibility(View.VISIBLE);
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
         Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
     }

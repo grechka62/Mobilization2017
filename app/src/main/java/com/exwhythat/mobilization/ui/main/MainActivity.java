@@ -268,11 +268,7 @@ public class MainActivity extends BaseActivity
             int lastIndex = stackSize - 1;
             return (fragmentManager.getBackStackEntryAt(lastIndex).getName().equals(tag));
         } else {
-            if (tag.equals(WeatherFragment.TAG)) {
-                return true;
-            } else {
-                return false;
-            }
+            return tag.equals(WeatherFragment.TAG);
         }
     }
 

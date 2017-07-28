@@ -40,7 +40,4 @@ public class RemoteCityRepository implements CityRepository {
 
     @Override
     public void putCity(CityInfo city) {}
-
-    @Override
-    public void updateWeather() {}
 }

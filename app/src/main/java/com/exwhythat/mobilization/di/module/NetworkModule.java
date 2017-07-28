@@ -1,6 +1,9 @@
 package com.exwhythat.mobilization.di.module;
 
+import android.content.Context;
+
 import com.exwhythat.mobilization.BuildConfig;
+import com.exwhythat.mobilization.di.ActivityContext;
 import com.exwhythat.mobilization.network.WeatherApi;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
@@ -88,8 +91,8 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi) {
-        return new RemoteWeatherRepository(weatherApi);
+    WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi, @ActivityContext Context context) {
+        return new RemoteWeatherRepository(weatherApi, context);
     }
 
     @Provides

@@ -1,9 +1,10 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import com.exwhythat.mobilization.model.CityInfo;
 import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
+import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
 import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
 
 import javax.inject.Inject;
@@ -24,14 +25,17 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     private Disposable inputObserve = new CompositeDisposable();
     private Disposable disposable = new CompositeDisposable();
 
+    private RemoteWeatherRepository remoteWeatherRepo;
     private RemoteCityRepository remoteRepo;
     private LocalCityRepository localRepo;
 
     @Inject
-    CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo) {
+    CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo,
+                               RemoteWeatherRepository remoteWeatherRepository) {
         super();
         this.remoteRepo = remoteRepo;
         this.localRepo = localRepo;
+        this.remoteWeatherRepo = remoteWeatherRepository;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
 
     public void getCitySuggest(CharSequence input) {
         getMvpView().clearSuggestions();
+        getMvpView().showLoading();
         disposable.dispose();
         disposable = remoteRepo.getCitySuggest(input.toString())
                 .subscribeOn(Schedulers.io())
@@ -52,16 +57,16 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     public void onSuggestClick(CharSequence placeId) {
         disposable.dispose();
         disposable = remoteRepo.getCityInfo(placeId.toString())
+                .doOnSuccess(cityInfo -> localRepo.putCity(cityInfo))
+                .flatMap(cityInfo -> remoteWeatherRepo.getCurrentWeather(cityInfo.getLocation()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onSuccess, this::onError);
     }
 
-    private void onSuccess(CityInfo cityInfo) {
+    private void onSuccess(WeatherResponse response) {
         disposable.dispose();
-        localRepo.putCity(cityInfo);
-        localRepo.updateWeather();
-        getMvpView().showWeather(cityInfo);
+        getMvpView().showWeather();
     }
 
     private void onError(Throwable throwable) {

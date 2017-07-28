@@ -1,12 +1,9 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
 import android.content.Context;
-import android.content.Intent;
 
-import com.exwhythat.mobilization.alarm.WeatherService;
 import com.exwhythat.mobilization.di.ActivityContext;
 import com.exwhythat.mobilization.model.CityInfo;
-import com.exwhythat.mobilization.network.cityResponse.part.Location;
 import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.exwhythat.mobilization.util.CityPrefs;
 
@@ -41,12 +38,4 @@ public class LocalCityRepository implements CityRepository {
     public void putCity(CityInfo city) {
         CityPrefs.putCity(context, city);
     }
-
-    @Override
-    public void updateWeather() {
-        Intent newIntent = new Intent(context, WeatherService.class);
-        context.startService(newIntent);
-    }
-
-
 }
