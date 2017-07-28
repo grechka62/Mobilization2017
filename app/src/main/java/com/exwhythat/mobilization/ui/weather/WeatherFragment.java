@@ -17,6 +17,7 @@ import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +27,6 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import com.exwhythat.mobilization.util.DataPrefs;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
         SharedPreferences.OnSharedPreferenceChangeListener {

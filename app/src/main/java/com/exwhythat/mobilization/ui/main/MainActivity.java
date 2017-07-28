@@ -10,11 +10,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.alarm.WeatherAlarm;
@@ -162,6 +164,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
+        hideKeyboard();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
             return;
@@ -298,5 +301,10 @@ public class MainActivity extends BaseActivity
         } else {
             setHomeAsUp(false);
         }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(navigationView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

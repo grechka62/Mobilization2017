@@ -47,7 +47,7 @@ public class WeatherPresenterImpl<V extends WeatherView> extends BasePresenterIm
         getMvpView().showLoading();
         cityRepository.getCityInfo(null)
                 .subscribe(cityInfo -> city = cityInfo);
-        showDataFromWeatherRepo(remoteRepo);
+        showDataFromWeatherRepo(localRepo);
     }
 
     @Override
@@ -79,7 +79,6 @@ public class WeatherPresenterImpl<V extends WeatherView> extends BasePresenterIm
     }
 
     private void onError(Throwable throwable) {
-        showDataFromWeatherRepo(localRepo);
         disposable.dispose();
         getMvpView().showError(throwable);
     }

@@ -43,7 +43,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
         disposable = repository.getCitySuggest(input.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showCitySuggest);
+                .subscribe(this::showCitySuggest, this::onError);
     }
 
     @Override
@@ -52,15 +52,17 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
         disposable = repository.getCityInfo(placeId.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccess, city -> onError());
+                .subscribe(this::onSuccess, this::onError);
     }
 
     private void onSuccess(CityInfo cityInfo) {
+        disposable.dispose();
         getMvpView().saveNewCity(cityInfo);
     }
 
-    private void onError() {
-
+    private void onError(Throwable throwable) {
+        disposable.dispose();
+        getMvpView().showError(throwable);
     }
 
     @Override
