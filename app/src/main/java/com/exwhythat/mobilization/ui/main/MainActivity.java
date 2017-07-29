@@ -164,7 +164,6 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        hideKeyboard();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
             return;
@@ -172,6 +171,7 @@ public class MainActivity extends BaseActivity
         if (isRootFragmentVisible()) {
             super.onBackPressed();
         } else {
+            hideKeyboard();
             getSupportFragmentManager().popBackStack();
         }
     }
