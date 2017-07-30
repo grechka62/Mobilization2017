@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.exwhythat.mobilization.ui.about.AboutPresenter;
 import com.exwhythat.mobilization.ui.about.AboutPresenterImpl;
 import com.exwhythat.mobilization.ui.about.AboutView;
+import com.exwhythat.mobilization.ui.citySelection.CitySelectionPresenter;
+import com.exwhythat.mobilization.ui.citySelection.CitySelectionPresenterImpl;
 import com.exwhythat.mobilization.ui.main.MainPresenter;
 import com.exwhythat.mobilization.ui.main.MainPresenterImpl;
 import com.exwhythat.mobilization.ui.main.MainView;
@@ -50,6 +52,13 @@ public class PresenterModule {
     @NonNull
     AboutPresenter<AboutView> provideAboutPresenter(
             @NonNull AboutPresenterImpl<AboutView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @NonNull
+    CitySelectionPresenter provideCitySelectionPresenter(
+            @NonNull CitySelectionPresenterImpl presenter) {
         return presenter;
     }
 }

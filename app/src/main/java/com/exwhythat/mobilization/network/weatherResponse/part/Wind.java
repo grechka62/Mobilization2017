@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.response.part;
+package com.exwhythat.mobilization.network.weatherResponse.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName;
 public class Wind {
     @SerializedName("speed")
     @Expose
-    private Double speed;
+    private double speed;
     @SerializedName("deg")
     @Expose
-    private Integer deg;
+    private double deg;
 }

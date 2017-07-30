@@ -17,6 +17,7 @@ import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.util.DataPrefs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +27,6 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import com.exwhythat.mobilization.util.DataPrefs;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -140,7 +140,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         // TODO: make a good layout for weather representation or use string holders
-        tvResult.setText("Date: " + sdf.format(date) + "\nMain: " + item.getMain() + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemp());
+        tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nMain: " + item.getMain() + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemp());
 
         tvResult.setVisibility(View.VISIBLE);
         pbLoading.setVisibility(View.GONE);

@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.response.part;
+package com.exwhythat.mobilization.network.weatherResponse.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class Weather {
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private int id;
     @SerializedName("main")
     @Expose
     private String main;

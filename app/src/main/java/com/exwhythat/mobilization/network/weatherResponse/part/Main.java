@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.response.part;
+package com.exwhythat.mobilization.network.weatherResponse.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,27 +10,27 @@ import com.google.gson.annotations.SerializedName;
 public class Main {
     @SerializedName("temp")
     @Expose
-    private Double temp;
+    private double temp;
     @SerializedName("pressure")
     @Expose
-    private Integer pressure;
+    private double pressure;
     @SerializedName("humidity")
     @Expose
-    private Integer humidity;
+    private double humidity;
     @SerializedName("temp_min")
     @Expose
-    private Double tempMin;
+    private double tempMin;
     @SerializedName("temp_max")
     @Expose
-    private Double tempMax;
+    private double tempMax;
     @SerializedName("sea_level")
     @Expose
-    private Double seaLevel;
+    private double seaLevel;
     @SerializedName("grnd_level")
     @Expose
-    private Double grndLevel;
+    private double grndLevel;
 
-    public Double getTemp() {
+    public double getTemp() {
         return temp;
     }
 }

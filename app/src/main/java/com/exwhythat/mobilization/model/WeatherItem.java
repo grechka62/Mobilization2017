@@ -1,7 +1,7 @@
 package com.exwhythat.mobilization.model;
 
-import com.exwhythat.mobilization.network.response.WeatherResponse;
-import com.exwhythat.mobilization.network.response.part.Weather;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
+import com.exwhythat.mobilization.network.weatherResponse.part.Weather;
 
 /**
  * Created by exwhythat on 15.07.17.
@@ -15,6 +15,8 @@ public class WeatherItem {
     private Double temp;
 
     private Long date;
+
+    private String city;
 
     public WeatherItem(WeatherResponse response) {
         // TODO: Check when it could be more than one
@@ -41,5 +43,13 @@ public class WeatherItem {
 
     public Long getDate() {
         return date;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
     }
 }

@@ -11,10 +11,10 @@ import okhttp3.Response;
  * Created by exwhythat on 15.07.17.
  */
 
-public class ApiKeyInsertInterceptor implements Interceptor {
+public class WeatherApiKeyInsertInterceptor implements Interceptor {
 
-    private static final String TRANSLATOR_API_KEY_KEY = "APPID";
-    private static final String TRANSLATOR_API_KEY_VALUE = "4ac1ae796a583e819faf2f2bec3f0aed";
+    private static final String WEATHER_API_KEY_KEY = "APPID";
+    private static final String WEATHER_API_KEY_VALUE = "4ac1ae796a583e819faf2f2bec3f0aed";
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -22,7 +22,7 @@ public class ApiKeyInsertInterceptor implements Interceptor {
         HttpUrl originalHttpUrl = originalRequest.url();
 
         HttpUrl urlWithApiKey = originalHttpUrl.newBuilder()
-                .addQueryParameter(TRANSLATOR_API_KEY_KEY, TRANSLATOR_API_KEY_VALUE)
+                .addQueryParameter(WEATHER_API_KEY_KEY, WEATHER_API_KEY_VALUE)
                 .build();
 
         Request.Builder requestBuilder = originalRequest.newBuilder()

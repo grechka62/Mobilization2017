@@ -9,6 +9,11 @@
             android:title="@string/action_weather" />
     </group>
 
+    <item
+        android:id="@+id/nav_city_selection"
+        android:icon="@drawable/ic_menu_send"
+        android:title="@string/action_city_selection"/>
+
     <group android:id="@+id/botItems"
         android:checkableBehavior="none">
         <item

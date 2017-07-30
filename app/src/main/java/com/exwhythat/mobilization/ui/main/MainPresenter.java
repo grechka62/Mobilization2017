@@ -10,4 +10,5 @@ public interface MainPresenter<V extends MainView> extends BasePresenter<V> {
     void onDrawerWeatherClick();
     void onDrawerAboutClick();
     void onDrawerSettingsClick();
+    void onDrawerCitySelectionClick();
 }

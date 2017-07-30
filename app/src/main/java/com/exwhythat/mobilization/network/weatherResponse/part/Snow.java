@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.response.part;
+package com.exwhythat.mobilization.network.weatherResponse.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,5 +10,5 @@ import com.google.gson.annotations.SerializedName;
 public class Snow {
     @SerializedName("3h")
     @Expose
-    private Integer last3h;
+    private double last3h;
 }

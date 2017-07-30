@@ -10,17 +10,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.ui.citySelection.CitySelectionFragment;
 import com.exwhythat.mobilization.ui.settings.SettingsFragment;
 import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 
@@ -31,12 +34,16 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Inject
     MainPresenter<MainView> presenter;
+
+    private Disposable disposable = new CompositeDisposable();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -52,12 +59,13 @@ public class MainActivity extends BaseActivity
 
     private boolean isHomeAsUp = false;
 
-    @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT})
+    @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT, FragmentCodes.CITY_SELECTION})
     @Retention(RetentionPolicy.SOURCE)
     private @interface FragmentCodes {
         int WEATHER = 0;
         int SETTINGS = 1;
         int ABOUT = 2;
+        int CITY_SELECTION = 3;
     }
 
     @Override
@@ -73,6 +81,7 @@ public class MainActivity extends BaseActivity
         fm.addOnBackStackChangedListener(this);
 
         presenter.onAttach(this);
+
         if (savedInstanceState == null) {
             fm.beginTransaction()
                     .add(R.id.fragment_placeholder, WeatherFragment.newInstance(), WeatherFragment.TAG)
@@ -142,6 +151,9 @@ public class MainActivity extends BaseActivity
             case R.id.nav_about:
                 presenter.onDrawerAboutClick();
                 break;
+            case R.id.nav_city_selection:
+                presenter.onDrawerCitySelectionClick();
+                break;
             default:
                 throw new IllegalStateException("Navigation drawer undeclared item");
         }
@@ -152,6 +164,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
+        hideKeyboard();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
             return;
@@ -166,6 +179,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         presenter.onDetach();
+        disposable.dispose();
         super.onDestroy();
     }
 
@@ -182,6 +196,11 @@ public class MainActivity extends BaseActivity
     @Override
     public void showSettings() {
         showFragment(FragmentCodes.SETTINGS);
+    }
+
+    @Override
+    public void showCitySelection() {
+        showFragment(FragmentCodes.CITY_SELECTION);
     }
 
     /**
@@ -218,6 +237,13 @@ public class MainActivity extends BaseActivity
                 }
                 newFragment = AboutFragment.newInstance();
                 break;
+            case FragmentCodes.CITY_SELECTION:
+                tag = CitySelectionFragment.TAG;
+                if (isFragmentVisible(tag)) {
+                    return;
+                }
+                newFragment = CitySelectionFragment.newInstance();
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported fragment code");
         }
@@ -242,11 +268,7 @@ public class MainActivity extends BaseActivity
             int lastIndex = stackSize - 1;
             return (fragmentManager.getBackStackEntryAt(lastIndex).getName().equals(tag));
         } else {
-            if (tag.equals(WeatherFragment.TAG)) {
-                return true;
-            } else {
-                return false;
-            }
+            return tag.equals(WeatherFragment.TAG);
         }
     }
 
@@ -275,5 +297,10 @@ public class MainActivity extends BaseActivity
         } else {
             setHomeAsUp(false);
         }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(navigationView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
