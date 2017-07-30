@@ -11,6 +11,10 @@ public class CityResponse {
     @Expose
     private Result result;
 
+    public CityResponse(Result result) {
+        this.result = result;
+    }
+
     public Result getResult() {
         return result;
     }

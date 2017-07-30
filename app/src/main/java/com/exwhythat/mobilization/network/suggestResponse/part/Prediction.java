@@ -15,6 +15,13 @@ public class Prediction {
     @Expose
     private String placeId;
 
+    public Prediction() {}
+
+    public Prediction(String desc, String id) {
+        description = desc;
+        placeId = id;
+    }
+
     public String getDescription() {
         return description;
     }

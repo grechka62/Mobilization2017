@@ -12,9 +12,9 @@ public class WeatherItem {
     private String main;
     private String description;
 
-    private Double temp;
+    private double temp;
 
-    private Long date;
+    private long date;
 
     private String city;
 
@@ -37,11 +37,11 @@ public class WeatherItem {
         return description;
     }
 
-    public Double getTemp() {
+    public double getTemp() {
         return temp;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 

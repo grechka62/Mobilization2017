@@ -33,4 +33,18 @@ public class Main {
     public double getTemp() {
         return temp;
     }
+
+    public Main(double temp) {
+        this.temp = temp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Main main = (Main) o;
+
+        return temp == main.getTemp();
+    }
 }
