@@ -21,7 +21,7 @@ public class LocalCityRepository implements CityRepository {
     private Context context;
 
     @Inject
-    LocalCityRepository(@ActivityContext Context context) {
+    public LocalCityRepository(@ActivityContext Context context) {
         this.context = context;
     }
     @Override

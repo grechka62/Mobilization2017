@@ -26,7 +26,7 @@ public class RemoteCityRepository implements CityRepository {
     @Override
     public Observable<Prediction> getCitySuggest(String input) {
         return cityApi
-                .getCitySuggest(input, CityApi.CITY_API_KEY_VALUE)
+                .getCitySuggest(input, CityApi.CITY_PLACE_TYPES, CityApi.CITY_API_KEY_VALUE)
                 .map(SuggestResponse::getPredictions)
                 .flatMap(Observable::fromIterable);
     }

@@ -14,9 +14,11 @@ import retrofit2.http.Query;
 
 public interface CityApi {
     String CITY_API_KEY_VALUE = "AIzaSyB6YnIYnkrKpFkKOA026xwtpK2KOqC260c";
+    String CITY_PLACE_TYPES = "(cities)";
 
     @GET("autocomplete/json")
     Observable<SuggestResponse> getCitySuggest(@Query("input") String input,
+                                               @Query("types") String types,
                                                @Query("key") String key);
 
     @GET("details/json")
