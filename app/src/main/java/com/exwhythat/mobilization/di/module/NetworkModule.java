@@ -6,6 +6,7 @@ import com.exwhythat.mobilization.BuildConfig;
 import com.exwhythat.mobilization.di.ActivityContext;
 import com.exwhythat.mobilization.network.WeatherApi;
 import com.exwhythat.mobilization.network.CityApi;
+import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
@@ -49,20 +50,8 @@ public class NetworkModule {
             builder.addNetworkInterceptor(new StethoInterceptor())
                     .addInterceptor(loggingInterceptor);
         }
-        return builder//.addInterceptor(new WeatherApiKeyInsertInterceptor())
-                .build();
+        return builder.build();
     }
-
-    /*@Provides
-    @Singleton
-    Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
-                .baseUrl(WEATHER_API_END_POINT)
-                .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }*/
 
     @Provides
     @Singleton
@@ -97,7 +86,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    RemoteCityRepository provideRemoteCityRepository(CityApi cityApi) {
+    CityRepository provideRemoteCityRepository(CityApi cityApi) {
         return new RemoteCityRepository(cityApi);
     }
 }
