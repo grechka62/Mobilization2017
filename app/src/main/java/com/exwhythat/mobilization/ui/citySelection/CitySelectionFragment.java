@@ -134,6 +134,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     @Override
     public void showError(Throwable throwable) {
+        loading.setVisibility(View.GONE);
         hint.setVisibility(View.VISIBLE);
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
         Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
