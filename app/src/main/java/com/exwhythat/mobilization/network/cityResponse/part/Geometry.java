@@ -10,6 +10,10 @@ public class Geometry {
     @Expose
     private Location location;
 
+    public Geometry(Location location) {
+        this.location = location;
+    }
+
     public Location getLocation() {
         return location;
     }

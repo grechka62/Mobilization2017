@@ -40,7 +40,7 @@ public class WeatherResponse {
     private Rain rain;
     @SerializedName("dt")
     @Expose
-    private Long date;
+    private long date;
     @SerializedName("sys")
     @Expose
     private Sys sys;
@@ -54,6 +54,12 @@ public class WeatherResponse {
     @Expose
     private int cod;
 
+    public WeatherResponse(Main main, List<Weather> weather, long date) {
+        this.main = main;
+        this.weather = weather;
+        this.date = date;
+    }
+
     public Main getMain() {
         return main;
     }
@@ -62,7 +68,22 @@ public class WeatherResponse {
         return weather;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeatherResponse weatherResponse = (WeatherResponse) o;
+
+        if (main != null ? !main.equals(weatherResponse.getMain()) : weatherResponse.getMain() != null)
+            return false;
+        if (weather.get(0) != null ? !weather.get(0).equals(weatherResponse.getWeatherList().get(0)) :
+                weatherResponse.getWeatherList().get(0) != null)
+            return false;
+        return date == weatherResponse.getDate();
     }
 }

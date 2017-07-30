@@ -14,6 +14,11 @@ public class Result {
     @Expose
     private String name;
 
+    public Result(String name, Geometry geometry) {
+        this.name = name;
+        this.geometry = geometry;
+    }
+
     public Geometry getGeometry() {
         return geometry;
     }

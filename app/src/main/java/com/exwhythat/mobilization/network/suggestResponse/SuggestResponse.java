@@ -13,6 +13,12 @@ public class SuggestResponse {
     @Expose
     private List<Prediction> predictions = null;
 
+    public SuggestResponse() {}
+
+    public SuggestResponse(List<Prediction> predictions) {
+        this.predictions = predictions;
+    }
+
     public List<Prediction> getPredictions() {
         return predictions;
     }

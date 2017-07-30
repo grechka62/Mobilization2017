@@ -21,11 +21,28 @@ public class Weather {
     @Expose
     private String icon;
 
+    public Weather(String main, String description) {
+        this.main = main;
+        this.description = description;
+    }
+
     public String getMain() {
         return main;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Weather weather = (Weather) o;
+
+        if (main != null ? !main.equals(weather.getMain()) : weather.getMain() != null)
+            return false;
+        return (main != null ? main.equals(weather.getDescription()) : weather.getDescription() == null);
     }
 }
