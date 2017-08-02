@@ -34,7 +34,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     public static final String TAG = WeatherFragment.class.getCanonicalName();
 
     @Inject
-    WeatherPresenter<WeatherView> presenter;
+    WeatherPresenter presenter;
 
     private ProgressBar pbLoading;
 

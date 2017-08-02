@@ -6,7 +6,7 @@ import com.exwhythat.mobilization.ui.base.BasePresenter;
  * Created by exwhythat on 11.07.17.
  */
 
-public interface WeatherPresenter<V extends WeatherView> extends BasePresenter<V> {
+public interface WeatherPresenter extends BasePresenter<WeatherView> {
     void onRefreshData();
     void onPrefsChanged();
 }

@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Inject
-    MainPresenter<MainView> presenter;
+    MainPresenter presenter;
 
     private Disposable disposable = new CompositeDisposable();
 

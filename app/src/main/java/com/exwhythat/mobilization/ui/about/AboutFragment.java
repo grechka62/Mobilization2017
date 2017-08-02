@@ -20,7 +20,7 @@ public class AboutFragment extends BaseFragment implements AboutView {
     public static final String TAG = AboutFragment.class.getCanonicalName();
 
     @Inject
-    AboutPresenterImpl<AboutView> presenter;
+    AboutPresenterImpl presenter;
 
     public AboutFragment() {}
 

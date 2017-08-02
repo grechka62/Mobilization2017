@@ -27,7 +27,7 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
     public static final String TAG = SettingsFragment.class.getCanonicalName();
 
     @Inject
-    SettingsPresenterImpl<SettingsView> presenter;
+    SettingsPresenterImpl presenter;
 
     RadioGroup rgUpdateInterval;
 

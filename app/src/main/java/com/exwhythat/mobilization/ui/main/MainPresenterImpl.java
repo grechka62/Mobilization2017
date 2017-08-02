@@ -11,8 +11,8 @@ import io.reactivex.disposables.Disposable;
  * Created by exwhythat on 07.07.17.
  */
 
-public class MainPresenterImpl<V extends MainView> extends BasePresenterImpl<V>
-        implements MainPresenter<V> {
+public class MainPresenterImpl extends BasePresenterImpl<MainView>
+        implements MainPresenter {
 
     private Disposable disposable = new CompositeDisposable();
 

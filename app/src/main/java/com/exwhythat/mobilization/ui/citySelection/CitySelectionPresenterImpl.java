@@ -6,6 +6,7 @@ import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
 import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
 import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
+import com.exwhythat.mobilization.util.rxSchedulers.RxSchedulers;
 
 import javax.inject.Inject;
 
@@ -28,10 +29,11 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     private RemoteWeatherRepository remoteWeatherRepo;
     private RemoteCityRepository remoteRepo;
     private LocalCityRepository localRepo;
+    private RxSchedulers schedulers;
 
     @Inject
-    CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo,
-                               RemoteWeatherRepository remoteWeatherRepository) {
+    public CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo,
+                                      RemoteWeatherRepository remoteWeatherRepository) {
         super();
         this.remoteRepo = remoteRepo;
         this.localRepo = localRepo;
@@ -41,11 +43,11 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     @Override
     public void onTextChanges(Observable<CharSequence> input) {
         inputObserve = input
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(schedulers.getMainThreadScheduler())
                 .subscribe(this::getCitySuggest);
     }
 
-    public void getCitySuggest(CharSequence input) {
+    private void getCitySuggest(CharSequence input) {
         getMvpView().clearSuggestions();
         getMvpView().showLoading();
         disposable.dispose();

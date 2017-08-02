@@ -22,8 +22,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by exwhythat on 11.07.17.
  */
 
-public class WeatherPresenterImpl<V extends WeatherView> extends BasePresenterImpl<V>
-        implements WeatherPresenter<V> {
+public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
+        implements WeatherPresenter {
 
     private Disposable disposable = new CompositeDisposable();
 
@@ -42,10 +42,10 @@ public class WeatherPresenterImpl<V extends WeatherView> extends BasePresenterIm
     }
 
     @Override
-    public void onAttach(V view) {
+    public void onAttach(WeatherView view) {
         super.onAttach(view);
         getMvpView().showLoading();
-        cityRepository.getCityInfo(null)
+        cityRepository.getCityInfo("")
                 .subscribe(cityInfo -> city = cityInfo);
         showDataFromWeatherRepo(localRepo);
     }
