@@ -1,6 +1,7 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.model.WeatherItem;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
@@ -68,7 +69,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
                 .subscribe(this::onSuccess, this::onError);
     }
 
-    private void onSuccess(WeatherResponse response) {
+    private void onSuccess(WeatherItem weatherItem) {
         disposable.dispose();
         getMvpView().showWeather();
     }

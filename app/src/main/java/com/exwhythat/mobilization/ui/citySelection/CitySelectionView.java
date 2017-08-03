@@ -1,7 +1,6 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import com.exwhythat.mobilization.model.CityInfo;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseView;
 
 /**

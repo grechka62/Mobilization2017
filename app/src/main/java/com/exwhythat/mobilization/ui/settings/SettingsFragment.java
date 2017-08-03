@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.alarm.WeatherAlarm.UpdateInterval;
-import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.exwhythat.mobilization.util.SettingPrefs;
 
@@ -42,16 +42,15 @@ public class SettingsFragment extends BaseFragment implements SettingsView {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        App.getComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        ActivityComponent component = getActivityComponent();
-        if (component != null) {
-            component.inject(this);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
     @Override

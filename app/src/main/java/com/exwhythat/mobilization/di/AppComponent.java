@@ -1,10 +1,13 @@
-package com.exwhythat.mobilization.di.component;
+package com.exwhythat.mobilization.di;
 
 import android.support.annotation.NonNull;
 
-import com.exwhythat.mobilization.di.module.ActivityModule;
+import com.exwhythat.mobilization.App;
+import com.exwhythat.mobilization.alarm.WeatherService;
+import com.exwhythat.mobilization.di.module.AppModule;
 import com.exwhythat.mobilization.di.module.NetworkModule;
 import com.exwhythat.mobilization.di.module.PresenterModule;
+import com.exwhythat.mobilization.di.module.StorageModule;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.citySelection.CitySelectionFragment;
 import com.exwhythat.mobilization.ui.main.MainActivity;
@@ -20,8 +23,10 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {ActivityModule.class, PresenterModule.class, NetworkModule.class})
-public interface ActivityComponent {
+@Component(modules = {AppModule.class, PresenterModule.class, NetworkModule.class, StorageModule.class})
+public interface AppComponent {
+    void inject(@NonNull App app);
+    void inject(@NonNull WeatherService weatherService);
     void inject(@NonNull MainActivity activity);
     void inject(@NonNull WeatherFragment fragment);
     void inject(@NonNull AboutFragment fragment);

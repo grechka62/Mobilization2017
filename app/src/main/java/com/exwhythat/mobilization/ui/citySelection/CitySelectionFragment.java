@@ -13,9 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.di.component.ActivityComponent;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
@@ -53,20 +53,14 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getComponent().inject(this);
         setHasOptionsMenu(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_city_selection, container, false);
-
-        ActivityComponent component = getActivityComponent();
-        if (component != null) {
-            component.inject(this);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_city_selection, container, false);
     }
 
     @Override

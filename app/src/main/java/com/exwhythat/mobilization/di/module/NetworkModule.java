@@ -1,13 +1,12 @@
 package com.exwhythat.mobilization.di.module;
 
-import android.content.Context;
-
 import com.exwhythat.mobilization.BuildConfig;
-import com.exwhythat.mobilization.di.ActivityContext;
-import com.exwhythat.mobilization.network.WeatherApi;
 import com.exwhythat.mobilization.network.CityApi;
+import com.exwhythat.mobilization.network.WeatherApi;
 import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
+import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
+import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,8 +17,6 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
-import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -80,8 +77,8 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi, @ActivityContext Context context) {
-        return new RemoteWeatherRepository(weatherApi, context);
+    WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi) {
+        return new RemoteWeatherRepository(weatherApi);
     }
 
     @Provides

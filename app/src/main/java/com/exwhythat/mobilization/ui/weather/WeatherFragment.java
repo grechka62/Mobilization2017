@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.exwhythat.mobilization.util.DataPrefs;
@@ -54,6 +54,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getComponent().inject(this);
         if (getArguments() != null) {
         }
         setHasOptionsMenu(true);
@@ -62,14 +63,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_weather, container, false);
-
-        ActivityComponent component = getActivityComponent();
-        if (component != null) {
-            component.inject(this);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_weather, container, false);
     }
 
     @Override
@@ -135,12 +129,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void showResult(WeatherItem item) {
         // TODO: extract data-related stuff to separate class
-        long dateInSeconds = item.getDate();
-        Date date = new Date(dateInSeconds * 1000);
+        Date date = new Date(item.getUpdateTime() * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         // TODO: make a good layout for weather representation or use string holders
-        tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nMain: " + item.getMain() + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemp());
+        tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemperature());
 
         tvResult.setVisibility(View.VISIBLE);
         pbLoading.setVisibility(View.GONE);

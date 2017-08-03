@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.alarm.WeatherAlarm;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
@@ -72,7 +73,7 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getActivityComponent().inject(this);
+        App.getComponent().inject(this);
         setUnbinder(ButterKnife.bind(this));
 
         initToolbar();

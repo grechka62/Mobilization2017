@@ -1,8 +1,7 @@
 package com.exwhythat.mobilization.ui.weather;
 
-import com.exwhythat.mobilization.model.CityInfo;
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
 import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepository;
@@ -30,7 +29,7 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
     private WeatherRepository remoteRepo;
     private WeatherRepository localRepo;
     private CityRepository cityRepository;
-    private CityInfo city;
+    private City city;
 
     @Inject
     public WeatherPresenterImpl(RemoteWeatherRepository remoteRepo, LocalWeatherRepository localRepo,
@@ -63,19 +62,19 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
     }
 
     private void showDataFromWeatherRepo(WeatherRepository weatherRepo) {
-        Single<WeatherResponse> currentWeatherSingle = weatherRepo.getCurrentWeather(city.getLocation());
+        Single<WeatherItem> currentWeatherSingle = weatherRepo.getCurrentWeather(city.getLocation());
 
         disposable.dispose();
         disposable = currentWeatherSingle
                 .subscribeOn(Schedulers.io())
-                .map(WeatherItem::new)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onSuccess, this::onError);
     }
 
     private void onSuccess(WeatherItem item) {
         disposable.dispose();
-        item.setCity(city.getName());
+        item.setCity(city);
+        //TODO saveWeather
         getMvpView().showResult(item);
     }
 

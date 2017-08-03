@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.exwhythat.mobilization.di.component.ActivityComponent;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -48,14 +46,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
             unbinder.unbind();
         }
         super.onDestroyView();
-    }
-
-    @Nullable
-    public ActivityComponent getActivityComponent() {
-        if (activity != null) {
-            return activity.getActivityComponent();
-        }
-        return null;
     }
 
     @Nullable
