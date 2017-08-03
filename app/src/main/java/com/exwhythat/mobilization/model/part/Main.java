@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.weatherResponse.part;
+package com.exwhythat.mobilization.model.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,36 +8,36 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Main {
+
     @SerializedName("temp")
     @Expose
-    private double temp;
+    private double temperature;
+
     @SerializedName("pressure")
     @Expose
     private double pressure;
+
     @SerializedName("humidity")
     @Expose
     private double humidity;
-    @SerializedName("temp_min")
-    @Expose
-    private double tempMin;
-    @SerializedName("temp_max")
-    @Expose
-    private double tempMax;
-    @SerializedName("sea_level")
-    @Expose
-    private double seaLevel;
-    @SerializedName("grnd_level")
-    @Expose
-    private double grndLevel;
 
-    public double getTemp() {
-        return temp;
+    public Main(double temperature) {
+        this.temperature = temperature;
     }
 
-    public Main(double temp) {
-        this.temp = temp;
+    public double getTemperature() {
+        return temperature;
     }
 
+    public double getPressure() {
+        return pressure;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    //TODO toString(), hashCode()
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,6 +45,6 @@ public class Main {
 
         Main main = (Main) o;
 
-        return temp == main.getTemp();
+        return temperature == main.getTemperature();
     }
 }

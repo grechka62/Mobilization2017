@@ -2,9 +2,8 @@ package com.exwhythat.mobilization.repository.cityRepository;
 
 import android.content.Context;
 
-import com.exwhythat.mobilization.di.ActivityContext;
-import com.exwhythat.mobilization.model.CityInfo;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.model.City;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.util.CityPrefs;
 
 import javax.inject.Inject;
@@ -21,7 +20,7 @@ public class LocalCityRepository implements CityRepository {
     private Context context;
 
     @Inject
-    public LocalCityRepository(@ActivityContext Context context) {
+    public LocalCityRepository(Context context) {
         this.context = context;
     }
     @Override
@@ -30,12 +29,12 @@ public class LocalCityRepository implements CityRepository {
     }
 
     @Override
-    public Single<CityInfo> getCityInfo(String placeId) {
+    public Single<City> getCityInfo(String placeId) {
         return Single.just(CityPrefs.getCity(context));
     }
 
     @Override
-    public void putCity(CityInfo city) {
+    public void putCity(City city) {
         CityPrefs.putCity(context, city);
     }
 }

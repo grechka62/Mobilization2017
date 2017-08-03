@@ -1,5 +1,5 @@
 
-package com.exwhythat.mobilization.network.suggestResponse.part;
+package com.exwhythat.mobilization.network.suggestResponse;
 
 import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
 import com.google.gson.annotations.Expose;

@@ -1,4 +1,4 @@
-package com.exwhythat.mobilization.network.weatherResponse.part;
+package com.exwhythat.mobilization.model.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,33 +8,24 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Weather {
-    @SerializedName("id")
-    @Expose
-    private int id;
-    @SerializedName("main")
-    @Expose
-    private String main;
+
     @SerializedName("description")
     @Expose
     private String description;
+
     @SerializedName("icon")
     @Expose
     private String icon;
 
-    public Weather(String main, String description) {
-        this.main = main;
+    public Weather(String description) {
         this.description = description;
-    }
-
-    public String getMain() {
-        return main;
     }
 
     public String getDescription() {
         return description;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -44,5 +35,5 @@ public class Weather {
         if (main != null ? !main.equals(weather.getMain()) : weather.getMain() != null)
             return false;
         return (main != null ? main.equals(weather.getDescription()) : weather.getDescription() == null);
-    }
+    }*/
 }

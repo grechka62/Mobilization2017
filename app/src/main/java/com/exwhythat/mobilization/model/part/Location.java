@@ -1,5 +1,5 @@
 
-package com.exwhythat.mobilization.network.cityResponse.part;
+package com.exwhythat.mobilization.model.part;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

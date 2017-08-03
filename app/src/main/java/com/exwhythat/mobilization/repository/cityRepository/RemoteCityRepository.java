@@ -1,9 +1,9 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
-import com.exwhythat.mobilization.model.CityInfo;
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 
 import javax.inject.Inject;
 
@@ -32,12 +32,12 @@ public class RemoteCityRepository implements CityRepository {
     }
 
     @Override
-    public Single<CityInfo> getCityInfo(String placeId) {
+    public Single<City> getCityInfo(String placeId) {
         return cityApi
                 .getCityInfo(placeId, CityApi.CITY_API_KEY_VALUE)
-                .map(CityInfo::new);
+                .map(City::new);
     }
 
     @Override
-    public void putCity(CityInfo city) {}
+    public void putCity(City city) {}
 }

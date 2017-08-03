@@ -1,28 +1,25 @@
 package com.exwhythat.mobilization.model;
 
 import com.exwhythat.mobilization.network.cityResponse.CityResponse;
-import com.exwhythat.mobilization.network.cityResponse.part.Location;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
+import com.exwhythat.mobilization.model.part.Location;
 
 /**
  * Created by Grechka on 26.07.2017.
  */
 
-public class CityInfo {
+public class City {
 
     private String name;
     private Location location;
 
-    public CityInfo(CityResponse cityResponse) {
+    public City(CityResponse cityResponse) {
         name = cityResponse.getResult().getName();
         location = cityResponse.getResult().getGeometry().getLocation();
     }
 
-    public CityInfo(String name, double latitude, double longitude) {
+    public City(String name, double latitude, double longitude) {
         this.name = name;
-        this.location = new Location(latitude, longitude);
+        location = new Location(latitude, longitude);
     }
 
     public String getName() {
@@ -35,7 +32,7 @@ public class CityInfo {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CityInfo{");
+        final StringBuilder sb = new StringBuilder("City{");
         sb.append("name='").append(name).append('\'');
         sb.append(", location=").append(location);
         sb.append('}');

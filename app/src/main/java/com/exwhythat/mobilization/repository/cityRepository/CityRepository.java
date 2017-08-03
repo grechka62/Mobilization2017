@@ -1,7 +1,7 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
-import com.exwhythat.mobilization.model.CityInfo;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.model.City;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -12,6 +12,6 @@ import io.reactivex.Single;
 
 public interface CityRepository {
     Observable<Prediction> getCitySuggest(String input);
-    Single<CityInfo> getCityInfo(String placeId);
-    void putCity(CityInfo city);
+    Single<City> getCityInfo(String placeId);
+    void putCity(City city);
 }
