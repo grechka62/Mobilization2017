@@ -26,4 +26,14 @@ public class LocalWeatherRepository implements WeatherRepository {
     public Single<WeatherItem> getCurrentWeather(Location location) {
         return null;
     }
+
+    @Override
+    public Observable<WeatherItem> getTodayWeather(Location location) {
+        return null;
+    }
+
+    @Override
+    public Observable<WeatherItem> getForecast(Location location) {
+        return null;
+    }
 }

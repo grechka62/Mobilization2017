@@ -1,5 +1,7 @@
 package com.exwhythat.mobilization.di.module;
 
+import android.support.annotation.NonNull;
+
 import com.exwhythat.mobilization.BuildConfig;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.network.WeatherApi;
@@ -32,12 +34,15 @@ public class NetworkModule {
     private static final String CITY_API_END_POINT = "https://maps.googleapis.com/maps/api/place/";
 
     @Provides
+    @NonNull
     @Singleton
     Gson provideGson() {
         return new GsonBuilder().create();
     }
 
     @Provides
+    @NonNull
+    @Singleton
     OkHttpClient provideOkHttpClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -51,6 +56,7 @@ public class NetworkModule {
     }
 
     @Provides
+    @NonNull
     @Singleton
     WeatherApi provideWeatherApi(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -64,6 +70,7 @@ public class NetworkModule {
     }
 
     @Provides
+    @NonNull
     @Singleton
     CityApi provideCityApi(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -76,12 +83,14 @@ public class NetworkModule {
     }
 
     @Provides
+    @NonNull
     @Singleton
     WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi) {
         return new RemoteWeatherRepository(weatherApi);
     }
 
     @Provides
+    @NonNull
     @Singleton
     CityRepository provideRemoteCityRepository(CityApi cityApi) {
         return new RemoteCityRepository(cityApi);

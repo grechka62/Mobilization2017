@@ -11,5 +11,10 @@ import io.reactivex.Single;
  */
 
 public interface WeatherRepository {
+
     Single<WeatherItem> getCurrentWeather(Location location);
+
+    Observable<WeatherItem> getTodayWeather(Location location);
+
+    Observable<WeatherItem> getForecast(Location location);
 }

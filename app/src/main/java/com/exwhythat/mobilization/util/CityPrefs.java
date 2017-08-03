@@ -3,7 +3,7 @@ package com.exwhythat.mobilization.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.exwhythat.mobilization.model.CityInfo;
+import com.exwhythat.mobilization.model.City;
 
 import timber.log.Timber;
 
@@ -27,20 +27,20 @@ public class CityPrefs {
         return context.getSharedPreferences(PREF_NAME_CITY, Context.MODE_PRIVATE);
     }
 
-    public static void putCity(Context context, CityInfo cityInfo) {
+    public static void putCity(Context context, City city) {
         getCityPrefs(context).edit()
-                .putString(KEY_CITY_TITLE, cityInfo.getName())
-                .putFloat(KEY_CITY_LATITUDE, (float) cityInfo.getLocation().getLat())
-                .putFloat(KEY_CITY_LONGITUDE, (float) cityInfo.getLocation().getLng())
+                .putString(KEY_CITY_TITLE, city.getName())
+                .putFloat(KEY_CITY_LATITUDE, (float) city.getLocation().getLat())
+                .putFloat(KEY_CITY_LONGITUDE, (float) city.getLocation().getLng())
                 .apply();
-        Timber.d("New city information has been written into SharedPreferences: " + cityInfo);
+        Timber.d("New city information has been written into SharedPreferences: " + city);
     }
 
-    public static CityInfo getCity(Context context) {
+    public static City getCity(Context context) {
         SharedPreferences prefs = getCityPrefs(context);
         String cityName = prefs.getString(KEY_CITY_TITLE, VALUE_CITY_TITLE);
         double latitude = (double) prefs.getFloat(KEY_CITY_LATITUDE, (float) VALUE_CITY_LATITUDE);
         double longitude = (double) prefs.getFloat(KEY_CITY_LONGITUDE, (float) VALUE_CITY_LONGITUDE);
-        return new CityInfo(cityName, latitude, longitude);
+        return new City(cityName, latitude, longitude);
     }
 }
