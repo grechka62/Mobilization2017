@@ -1,25 +1,45 @@
 package com.exwhythat.mobilization.model;
 
+import android.support.annotation.IntDef;
+
 import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.network.weatherResponse.ForecastResponse;
 import com.exwhythat.mobilization.model.part.Main;
 import com.exwhythat.mobilization.model.part.Wind;
+import com.exwhythat.mobilization.ui.main.MainActivity;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Calendar;
+
+import nl.qbusict.cupboard.annotation.Column;
+import nl.qbusict.cupboard.annotation.Ignore;
 
 /**
  * Created by exwhythat on 15.07.17.
  */
 
 public class WeatherItem {
+    @IntDef({WeatherTypes.CURRENT, WeatherTypes.TODAY, WeatherTypes.FORECAST})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface WeatherTypes {
+        int CURRENT = 0;
+        int TODAY = 1;
+        int FORECAST = 2;
+    }
 
-    private City city;
-    private long updateTime;
-    private long weatherTime;
+    private long _id;
+    @Column("city_id") private long cityId;
+    @Column("update_time") private long updateTime;
+    @Column("weather_time") private long weatherTime;
     private String description;
     private double temperature;
     private double humidity;
-    private Wind wind;
+    @Column("wind_speed") private double windSpeed;
+    @Column("wind_degree") private double windDegree;
+    @WeatherTypes private int type;
+
+    public WeatherItem(){};
 
     public WeatherItem(WeatherResponse response) {
         updateTime = Calendar.getInstance().getTimeInMillis();
@@ -28,7 +48,8 @@ public class WeatherItem {
         Main main = response.getMain();
         temperature = main.getTemperature();
         humidity = main.getHumidity();
-        wind = response.getWind();
+        windSpeed = response.getWind().getSpeed();
+        windDegree = response.getWind().getDegree();
     }
 
     public WeatherItem(ForecastResponse response) {
@@ -37,15 +58,16 @@ public class WeatherItem {
         description = response.getWeather().get(0).getDescription();
         temperature = response.getTemperatures().getDayTemp();
         humidity = response.getHumidity();
-        wind = new Wind(response.getWindSpeed(), response.getWindDegree());
+        windSpeed = response.getWindSpeed();
+        windDegree = response.getWindDegree();
     }
 
-    public void setCity(City city) {
-        this.city = city;
+    public void setCity(long cityId) {
+        this.cityId = cityId;
     }
 
-    public City getCity() {
-        return city;
+    public long getCity() {
+        return cityId;
     }
 
     public long getUpdateTime() {
@@ -68,7 +90,11 @@ public class WeatherItem {
         return humidity;
     }
 
-    public Wind getWind() {
-        return wind;
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    public double getWindDegree() {
+        return windDegree;
     }
 }

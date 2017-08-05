@@ -16,13 +16,15 @@ ext.versions = [
 		dagger						 : '2.11',
         butterknife					 : '8.7.0',
 
+		rxjava                       : '2.1.1',
+		rxandroid                    : '2.0.1',
+		rxbinding					 : '2.0.0',
+
 		retrofit					 : '2.3.0',
 		gson						 : '2.8.1',
 		okhttpLogging				 : '3.6.0',
 
-        rxjava                       : '2.1.1',
-        rxandroid                    : '2.0.1',
-        rxbinding					 : '2.0.0',
+		rxcupboard					 : '2.0',
 
 		stetho						 : '1.5.0',
 		leakcanary					 : '1.5.1',
@@ -49,15 +51,17 @@ ext.libraries = [
 		butterknife				: "com.jakewharton:butterknife:$versions.butterknife",
 		butterknifeCompiler		: "com.jakewharton:butterknife-compiler:$versions.butterknife",
 
+		rxjava                  : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
+		rxandroid               : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
+		rxbinding				: "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$versions.rxbinding",
+
 		retrofit				: "com.squareup.retrofit2:retrofit:$versions.retrofit",
 		gson					: "com.google.code.gson:gson:$versions.gson",
 		converterGson			: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
 		rxadapter               : "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
 		okhttpLogging			: "com.squareup.okhttp3:logging-interceptor:$versions.okhttpLogging",
 
-		rxjava                  : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
-		rxandroid               : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
-		rxbinding				: "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$versions.rxbinding",
+		rxcupboard				: "nl.2312:rxcupboard2:$versions.rxcupboard",
 
         // Debug dependencies
 		stetho					: "com.facebook.stetho:stetho:$versions.stetho",

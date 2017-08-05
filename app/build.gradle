@@ -80,4 +80,6 @@ dependencies {
     compile libraries.rxjava
     compile libraries.rxadapter
     compile libraries.rxbinding
+    /** Database */
+    compile libraries.rxcupboard
 }

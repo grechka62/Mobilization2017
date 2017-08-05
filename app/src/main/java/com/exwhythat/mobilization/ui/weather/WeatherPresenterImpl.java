@@ -46,35 +46,36 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
         getMvpView().showLoading();
         cityRepository.getCityInfo("")
                 .subscribe(cityInfo -> city = cityInfo);
-        showDataFromWeatherRepo(localRepo);
+        showDataFromWeatherRepo(localRepo, 0);
     }
 
     @Override
     public void onRefreshData() {
         getMvpView().showLoading();
-        showDataFromWeatherRepo(remoteRepo);
+        showDataFromWeatherRepo(remoteRepo, 1);
     }
 
     @Override
     public void onPrefsChanged() {
         getMvpView().showLoading();
-        showDataFromWeatherRepo(localRepo);
+        showDataFromWeatherRepo(localRepo, 0);
     }
 
-    private void showDataFromWeatherRepo(WeatherRepository weatherRepo) {
-        Single<WeatherItem> currentWeatherSingle = weatherRepo.getCurrentWeather(city.getLocation());
+    private void showDataFromWeatherRepo(WeatherRepository weatherRepo, int type) {
+        Single<WeatherItem> currentWeatherSingle = weatherRepo.getCurrentWeather(city);
 
         disposable.dispose();
         disposable = currentWeatherSingle
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccess, this::onError);
+                .subscribe(item -> onSuccess(item, type), this::onError);
     }
 
-    private void onSuccess(WeatherItem item) {
+    private void onSuccess(WeatherItem item, int type) {
         disposable.dispose();
-        item.setCity(city);
-        //TODO saveWeather
+        item.setCity(city.getId());
+        if (type > 0)
+            localRepo.putCurrentWeather(item);
         getMvpView().showResult(item);
     }
 

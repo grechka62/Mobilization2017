@@ -1,11 +1,13 @@
 package com.exwhythat.mobilization.repository.weatherRepository;
 
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.network.WeatherApi;
-import com.exwhythat.mobilization.model.part.Location;
 import com.exwhythat.mobilization.network.weatherResponse.ForecastWeatherResponse;
 import com.exwhythat.mobilization.network.weatherResponse.TodaysWeatherResponse;
 import com.exwhythat.mobilization.util.Constants;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,17 +28,20 @@ public class RemoteWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public Single<WeatherItem> getCurrentWeather(Location location) {
+    public Single<WeatherItem> getCurrentWeather(City city) {
         return weatherApi
-                .getCurrentWeatherForCity(location.getLat(), location.getLng(),
+                .getCurrentWeatherForCity(city.getLatitude(), city.getLongitude(),
                         Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE)
                 .map(WeatherItem::new);
     }
 
     @Override
-    public Observable<WeatherItem> getTodayWeather(Location location) {
+    public void putCurrentWeather(WeatherItem weatherItem) {}
+
+    @Override
+    public Observable<WeatherItem> getTodayWeather(City city) {
         return weatherApi
-                .getTodayWeather(location.getLat(), location.getLng(),
+                .getTodayWeather(city.getLatitude(), city.getLongitude(),
                         Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE)
                 .map(TodaysWeatherResponse::getTodaysWeatherList)
                 .flatMapObservable(Observable::fromIterable)
@@ -44,12 +49,15 @@ public class RemoteWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public Observable<WeatherItem> getForecast(Location location) {
+    public Observable<WeatherItem> getForecast(City city) {
         return weatherApi
-                .getForecast(location.getLat(), location.getLng(),
+                .getForecast(city.getLatitude(), city.getLongitude(),
                         Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE)
                 .map(ForecastWeatherResponse::getForecasts)
                 .flatMapObservable(Observable::fromIterable)
                 .map(WeatherItem::new);
     }
+
+    @Override
+    public void putWeatherList(List<WeatherItem> weatherItem) {}
 }

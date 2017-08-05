@@ -1,7 +1,9 @@
 package com.exwhythat.mobilization.repository.weatherRepository;
 
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.model.part.Location;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -12,9 +14,13 @@ import io.reactivex.Single;
 
 public interface WeatherRepository {
 
-    Single<WeatherItem> getCurrentWeather(Location location);
+    Single<WeatherItem> getCurrentWeather(City city);
 
-    Observable<WeatherItem> getTodayWeather(Location location);
+    void putCurrentWeather(WeatherItem weatherItem);
 
-    Observable<WeatherItem> getForecast(Location location);
+    Observable<WeatherItem> getTodayWeather(City city);
+
+    Observable<WeatherItem> getForecast(City city);
+
+    void putWeatherList(List<WeatherItem> weatherItem);
 }
