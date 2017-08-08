@@ -9,6 +9,8 @@ import javax.inject.Inject;
  */
 
 public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V> {
+    protected final int TYPE_LOCAL = 0;
+    protected final int TYPE_REMOTE = 1;
 
     private V mvpView;
 

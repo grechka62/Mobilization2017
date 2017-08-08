@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.exwhythat.mobilization.model.CheckedCity;
 import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
 
@@ -32,6 +33,7 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
         this.cupboard = cupboard;
         cupboard.register(WeatherItem.class);
         cupboard.register(City.class);
+        cupboard.register(CheckedCity.class);
     }
 
     @Override

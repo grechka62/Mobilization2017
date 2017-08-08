@@ -28,7 +28,7 @@ public class WeatherItem {
         int FORECAST = 2;
     }
 
-    private long _id;
+    @Column("_id") private long id;
     @Column("city_id") private long cityId;
     @Column("update_time") private long updateTime;
     @Column("weather_time") private long weatherTime;
@@ -60,6 +60,14 @@ public class WeatherItem {
         humidity = response.getHumidity();
         windSpeed = response.getWindSpeed();
         windDegree = response.getWindDegree();
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public void setCity(long cityId) {
@@ -96,5 +104,13 @@ public class WeatherItem {
 
     public double getWindDegree() {
         return windDegree;
+    }
+
+    public void setType(@WeatherTypes int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
     }
 }

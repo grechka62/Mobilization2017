@@ -1,15 +1,18 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
-import android.content.Context;
-
+import com.exwhythat.mobilization.model.CheckedCity;
 import com.exwhythat.mobilization.model.City;
+import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.network.suggestResponse.Prediction;
-import com.exwhythat.mobilization.util.CityPrefs;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
+import nl.nl2312.rxcupboard2.DatabaseChange;
+import nl.nl2312.rxcupboard2.RxDatabase;
 
 /**
  * Created by Grechka on 28.07.2017.
@@ -17,12 +20,13 @@ import io.reactivex.Single;
 
 public class LocalCityRepository implements CityRepository {
 
-    private Context context;
+    private RxDatabase database;
 
     @Inject
-    public LocalCityRepository(Context context) {
-        this.context = context;
+    public LocalCityRepository(RxDatabase database) {
+        this.database = database;
     }
+
     @Override
     public Observable<Prediction> getCitySuggest(String input) {
         return null;
@@ -30,11 +34,57 @@ public class LocalCityRepository implements CityRepository {
 
     @Override
     public Single<City> getCityInfo(String placeId) {
-        return Single.just(CityPrefs.getCity(context));
+        return database.query(City.class, "place_id=?", placeId)
+                .first(new City());
+    }
+
+    public Single<City> getCheckedCity(long id) {
+        return database.query(City.class, "_id=?", Long.toString(id))
+                .first(new City());
     }
 
     @Override
-    public void putCity(City city) {
-        CityPrefs.putCity(context, city);
+    public Single<CheckedCity> putCity(City city) {
+        return database.put(city)
+                .delaySubscription(database.query(database.buildQuery(City.class).orderBy("_id desc").limit(1))
+                        .doOnNext(item -> city.setId(item.getId() + 1)))
+                .flatMap(item -> database.put(new CheckedCity(item.getId())));
+    }
+
+    @Override
+    public Single<CheckedCity> changeCheckedCity(long id) {
+        return database.put(new CheckedCity(id));
+    }
+
+    public Observable<City> getAllCities() {
+        return database.query(City.class, "_id>?", "0").toObservable();
+    }
+
+    public void initCheckedCity() {
+        database.put(new City()).subscribeOn(Schedulers.io()).subscribe();
+        database.put(new CheckedCity()).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    public Single<CheckedCity> getCheckedId() {
+        return database.query(CheckedCity.class).first(new CheckedCity());
+    }
+
+    public Flowable<DatabaseChange<CheckedCity>> observeCheckedCity() {
+        return database.changes(CheckedCity.class);
+    }
+
+    public Flowable<DatabaseChange<City>> observeCity() {
+        return database.changes(City.class);
+    }
+
+    public Flowable<DatabaseChange<WeatherItem>> observeWeather() {
+        return database.changes(WeatherItem.class);
+    }
+
+    public Single<City> deleteCity(int id) {
+        return database.delete(City.class, id)
+                .flatMap(item -> database.query(database.buildQuery(City.class)
+                        .orderBy("_id"))
+                        .first(new City()));
     }
 }

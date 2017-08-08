@@ -36,7 +36,9 @@ public class RemoteWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public void putCurrentWeather(WeatherItem weatherItem) {}
+    public Single<WeatherItem> putCurrentWeather(WeatherItem weatherItem) {
+        return Single.just(weatherItem);
+    }
 
     @Override
     public Observable<WeatherItem> getTodayWeather(City city) {
@@ -59,5 +61,7 @@ public class RemoteWeatherRepository implements WeatherRepository {
     }
 
     @Override
-    public void putWeatherList(List<WeatherItem> weatherItem) {}
+    public Observable<WeatherItem> putWeatherList(List<WeatherItem> weatherList) {
+        return Observable.fromIterable(weatherList);
+    }
 }

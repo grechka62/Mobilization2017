@@ -74,3 +74,5 @@
 
 #Okio
 -dontwarn okio.**
+
+-keep class com.exwhythat.mobilization.model.**

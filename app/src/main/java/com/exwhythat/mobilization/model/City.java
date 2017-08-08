@@ -1,7 +1,12 @@
 package com.exwhythat.mobilization.model;
 
-import com.exwhythat.mobilization.network.cityResponse.CityResponse;
+import android.support.annotation.IntDef;
+
 import com.exwhythat.mobilization.model.part.Location;
+import com.exwhythat.mobilization.network.cityResponse.CityResponse;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import nl.qbusict.cupboard.annotation.Column;
 
@@ -10,16 +15,34 @@ import nl.qbusict.cupboard.annotation.Column;
  */
 
 public class City {
+    @IntDef({City.IsDefault.YES, City.IsDefault.NO})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface IsDefault {
+        int NO = 0;
+        int YES = 1;
+    }
 
-    private long _id;
+    @Column("_id") private long id;
+    @Column("place_id") private String placeId;
     private String name;
     private double latitude;
     private double longitude;
+
+    public City() {}
+
+    public City(City city) {
+        id = city.getId();
+        placeId = city.getPlaceId();
+        name = city.getName();
+        latitude = city.getLatitude();
+        longitude = city.getLongitude();
+    }
 
     public City(CityResponse cityResponse) {
         name = cityResponse.getResult().getName();
         latitude = cityResponse.getResult().getGeometry().getLocation().getLat();
         longitude = cityResponse.getResult().getGeometry().getLocation().getLng();
+        placeId = cityResponse.getResult().getPlaceId();
     }
 
     public City(String name, double latitude, double longitude) {
@@ -28,8 +51,20 @@ public class City {
         this.longitude = longitude;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getId() {
-        return _id;
+        return id;
+    }
+
+    public void setPlaceId(String id) {
+        placeId = id;
+    }
+
+    public String getPlaceId() {
+        return placeId;
     }
 
     public String getName() {

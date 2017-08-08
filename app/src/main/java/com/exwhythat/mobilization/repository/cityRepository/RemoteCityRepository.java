@@ -1,9 +1,10 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
+import com.exwhythat.mobilization.model.CheckedCity;
 import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.network.CityApi;
-import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
 import com.exwhythat.mobilization.network.suggestResponse.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
 
 import javax.inject.Inject;
 
@@ -39,5 +40,12 @@ public class RemoteCityRepository implements CityRepository {
     }
 
     @Override
-    public void putCity(City city) {}
+    public Single<CheckedCity> putCity(City city) {
+        return Single.just(new CheckedCity());
+    }
+
+    @Override
+    public Single<CheckedCity> changeCheckedCity(long id) {
+        return Single.just(new CheckedCity());
+    }
 }

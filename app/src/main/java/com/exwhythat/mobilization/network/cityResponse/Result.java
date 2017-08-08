@@ -15,6 +15,10 @@ public class Result {
     @Expose
     private String name;
 
+    @SerializedName("place_id")
+    @Expose
+    private String placeId;
+
     public Result(String name, Geometry geometry) {
         this.name = name;
         this.geometry = geometry;
@@ -26,6 +30,10 @@ public class Result {
 
     public String getName() {
         return name;
+    }
+
+    public String getPlaceId() {
+        return placeId;
     }
 
 }

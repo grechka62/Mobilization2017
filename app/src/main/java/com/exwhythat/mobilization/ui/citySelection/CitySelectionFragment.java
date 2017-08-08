@@ -85,7 +85,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_city_selection);
+        getActivity().setTitle(R.string.action_add_city);
         presenter.onAttach(this);
     }
 
@@ -104,7 +104,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void showCitySuggest(Prediction suggest) {
         suggestAdapter.add(suggest);
         loading.setVisibility(View.GONE);
-        suggestList.setAdapter(suggestAdapter);
+        suggestAdapter.notifyDataSetChanged();
         suggestList.setVisibility(View.VISIBLE);
     }
 

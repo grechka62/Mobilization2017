@@ -1,7 +1,6 @@
 package com.exwhythat.mobilization.ui.weather;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
-import com.exwhythat.mobilization.util.DataPrefs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,10 +25,11 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class WeatherFragment extends BaseFragment implements WeatherView,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class WeatherFragment extends BaseFragment implements WeatherView {
 
     public static final String TAG = WeatherFragment.class.getCanonicalName();
+    private final static String CHECKED_CITY = "city";
+    private long checkedCityId;
 
     @Inject
     WeatherPresenter presenter;
@@ -44,9 +42,10 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     public WeatherFragment() {}
 
     @NonNull
-    public static WeatherFragment newInstance() {
+    public static WeatherFragment newInstance(long checkedCityId) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
+        args.putLong(CHECKED_CITY, checkedCityId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,6 +55,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         super.onCreate(savedInstanceState);
         App.getComponent().inject(this);
         if (getArguments() != null) {
+            checkedCityId = getArguments().getLong(CHECKED_CITY);
         }
         setHasOptionsMenu(true);
     }
@@ -69,8 +69,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getContext(), "View created!", Toast.LENGTH_SHORT).show();
-
         pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
         tvResult = ButterKnife.findById(view, R.id.tvResult);
         tvError = ButterKnife.findById(view, R.id.tvError);
@@ -81,6 +79,9 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(R.string.action_weather);
         presenter.onAttach(this);
+        presenter.observeCheckedCity();
+        presenter.observeWeather();
+        presenter.onPrefsChanged(checkedCityId);
     }
 
     @Override
@@ -92,20 +93,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
-        weatherPrefs.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
-        weatherPrefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -128,6 +115,8 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
     @Override
     public void showResult(WeatherItem item) {
+        checkedCityId = item.getCity();
+        getArguments().putLong(CHECKED_CITY, checkedCityId);
         // TODO: extract data-related stuff to separate class
         Date date = new Date(item.getUpdateTime() * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
@@ -148,10 +137,5 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         tvResult.setVisibility(View.GONE);
         pbLoading.setVisibility(View.GONE);
         tvError.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        presenter.onPrefsChanged();
     }
 }

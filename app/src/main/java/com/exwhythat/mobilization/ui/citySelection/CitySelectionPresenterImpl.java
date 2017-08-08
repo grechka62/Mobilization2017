@@ -1,13 +1,11 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import com.exwhythat.mobilization.model.WeatherItem;
+import com.exwhythat.mobilization.model.CheckedCity;
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.network.suggestResponse.Prediction;
-import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
 import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
-import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
 import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
-import com.exwhythat.mobilization.util.rxSchedulers.RxSchedulers;
 
 import javax.inject.Inject;
 
@@ -27,30 +25,29 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     private Disposable inputObserve = new CompositeDisposable();
     private Disposable disposable = new CompositeDisposable();
 
-    private RemoteWeatherRepository remoteWeatherRepo;
     private RemoteCityRepository remoteRepo;
     private LocalCityRepository localRepo;
-    private RxSchedulers schedulers;
 
     @Inject
-    public CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo,
-                                      RemoteWeatherRepository remoteWeatherRepository) {
+    public CitySelectionPresenterImpl(RemoteCityRepository remoteRepo, LocalCityRepository localRepo) {
         super();
         this.remoteRepo = remoteRepo;
         this.localRepo = localRepo;
-        this.remoteWeatherRepo = remoteWeatherRepository;
     }
 
     @Override
     public void onTextChanges(Observable<CharSequence> input) {
         inputObserve = input
-                .observeOn(schedulers.getMainThreadScheduler())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::getCitySuggest);
     }
 
     private void getCitySuggest(CharSequence input) {
-        getMvpView().clearSuggestions();
-        getMvpView().showLoading();
+        CitySelectionView v = getMvpView();
+        if (v != null) {
+            getMvpView().clearSuggestions();
+            getMvpView().showLoading();
+        }
         disposable.dispose();
         disposable = remoteRepo.getCitySuggest(input.toString())
                 .subscribeOn(Schedulers.io())
@@ -61,22 +58,45 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     @Override
     public void onSuggestClick(CharSequence placeId) {
         disposable.dispose();
-        disposable = remoteRepo.getCityInfo(placeId.toString())
-                .doOnSuccess(cityInfo -> localRepo.putCity(cityInfo))
-                .flatMap(cityInfo -> remoteWeatherRepo.getCurrentWeather(cityInfo.getLocation()))
+        disposable = localRepo.getCityInfo(placeId.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccess, this::onError);
+                .subscribe(city -> {
+                        city.setPlaceId(placeId.toString());
+                        onSuccess(city, TYPE_LOCAL);},
+                        this::onError);
     }
 
-    private void onSuccess(WeatherItem weatherItem) {
+    private void getCityInfoFromHttp(String placeId) {
         disposable.dispose();
-        getMvpView().showWeather();
+        disposable = remoteRepo.getCityInfo(placeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(city -> onSuccess(city, TYPE_REMOTE), this::onError);
+    }
+
+    private void onSuccess(City city, int type) {
+        disposable.dispose();
+        if (type == TYPE_REMOTE) {
+            localRepo.putCity(city)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::showWeather);
+        } else {
+            if (city.getName() == null) {
+                getCityInfoFromHttp(city.getPlaceId());
+            } else {
+                localRepo.changeCheckedCity(city.getId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::showWeather);
+            }
+        }
     }
 
     private void onError(Throwable throwable) {
         disposable.dispose();
-        getMvpView().showError(throwable);
+        if (getMvpView() != null) getMvpView().showError(throwable);
     }
 
     @Override
@@ -87,6 +107,10 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     }
 
     private void showCitySuggest(Prediction suggest) {
-        getMvpView().showCitySuggest(suggest);
+        if (getMvpView() != null) getMvpView().showCitySuggest(suggest);
+    }
+
+    private void showWeather(CheckedCity city) {
+        if (getMvpView() != null) getMvpView().showWeather();
     }
 }

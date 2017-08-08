@@ -16,11 +16,11 @@ public interface WeatherRepository {
 
     Single<WeatherItem> getCurrentWeather(City city);
 
-    void putCurrentWeather(WeatherItem weatherItem);
+    Single<WeatherItem> putCurrentWeather(WeatherItem weatherItem);
 
     Observable<WeatherItem> getTodayWeather(City city);
 
     Observable<WeatherItem> getForecast(City city);
 
-    void putWeatherList(List<WeatherItem> weatherItem);
+    Observable<WeatherItem> putWeatherList(List<WeatherItem> weatherList);
 }

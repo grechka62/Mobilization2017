@@ -2,6 +2,7 @@ package com.exwhythat.mobilization.ui.main;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,12 +16,14 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.alarm.WeatherAlarm;
+import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.ui.about.AboutFragment;
 import com.exwhythat.mobilization.ui.base.BaseActivity;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
@@ -30,6 +33,7 @@ import com.exwhythat.mobilization.ui.weather.WeatherFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,10 +59,15 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    Menu menu;
+
     private ActionBarDrawerToggle drawerToggle;
     private DrawerArrowDrawable homeDrawable;
 
     private boolean isHomeAsUp = false;
+
+    private long checkedCityId;
+    private boolean recreate;
 
     @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT, FragmentCodes.CITY_SELECTION})
     @Retention(RetentionPolicy.SOURCE)
@@ -75,19 +84,18 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         App.getComponent().inject(this);
         setUnbinder(ButterKnife.bind(this));
+        presenter.onAttach(this);
 
+        recreate = savedInstanceState != null;
         initToolbar();
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(this);
 
-        presenter.onAttach(this);
+        presenter.observeCheckedCity();
+        presenter.observeCity();
 
-        if (savedInstanceState == null) {
-            fm.beginTransaction()
-                    .add(R.id.fragment_placeholder, WeatherFragment.newInstance(), WeatherFragment.TAG)
-                    .commit();
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (recreate && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
             setHomeAsUp(true);
         }
 
@@ -112,8 +120,57 @@ public class MainActivity extends BaseActivity
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
+        presenter.initCities();
+    }
+
+    public void setCitiesOnDrawer(List<City> cities, long checkedCity) {
+        menu = navigationView.getMenu();
+        if (checkedCity != 0) {
+            menu.clear();
+            MenuItem item;
+            for (int i = 0; i < cities.size(); i++) {
+                int itemId = (int) cities.get(i).getId();
+                menu.add(R.id.topItems, itemId, i, cities.get(i).getName());
+                item = menu.getItem(i);
+                item.setIcon(R.drawable.ic_menu_send);
+                item.setActionView(R.layout.menu_city_item);
+                item.getActionView().findViewById(R.id.delete_city_but)
+                        .setOnClickListener(view -> presenter.onDrawerCityDeletingClick(itemId, checkedCityId));
+            }
+            menu.add(R.id.botItems, R.id.nav_add_city, cities.size(), getResources().getString(R.string.action_add_city));
+            menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
+            menu.add(R.id.botItems, R.id.nav_settings, cities.size() + 1, getResources().getString(R.string.action_settings));
+            menu.getItem(cities.size() + 1).setIcon(R.drawable.ic_settings);
+            menu.add(R.id.botItems, R.id.nav_about, cities.size() + 2, getResources().getString(R.string.action_about));
+            menu.getItem(cities.size() + 2).setIcon(R.drawable.ic_help_outline);
+        } else {
+            presenter.initCheckedCity();
+        }
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_weather);
+        setCheckedCity((int) checkedCity);
+    }
+
+    @Override
+    public void setCheckedCity(int id) {
+        checkedCityId = id;
+        if ((!recreate) && checkedCityId > 0) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_placeholder,
+                            WeatherFragment.newInstance(checkedCityId), WeatherFragment.TAG)
+                    .commit();
+            recreate = true;
+        }
+        navigationView.setCheckedItem(id);
+    }
+
+    @Override
+    public void addCity(City city) {
+        menu.add(R.id.topItems, (int) city.getId(), Menu.NONE, city.getName());
+    }
+
+    @Override
+    public void deleteCity(int itemId) {
+        menu.removeItem(itemId);
     }
 
     @Override
@@ -143,20 +200,18 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_weather:
-                presenter.onDrawerWeatherClick();
-                break;
             case R.id.nav_settings:
                 presenter.onDrawerSettingsClick();
                 break;
             case R.id.nav_about:
                 presenter.onDrawerAboutClick();
                 break;
-            case R.id.nav_city_selection:
+            case R.id.nav_add_city:
                 presenter.onDrawerCitySelectionClick();
                 break;
             default:
-                throw new IllegalStateException("Navigation drawer undeclared item");
+                presenter.onDrawerWeatherClick(item.getItemId());
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -220,7 +275,7 @@ public class MainActivity extends BaseActivity
                 if (isFragmentVisible(tag)) {
                     return;
                 }
-                newFragment = WeatherFragment.newInstance();
+                newFragment = WeatherFragment.newInstance(checkedCityId);
 
                 fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 break;

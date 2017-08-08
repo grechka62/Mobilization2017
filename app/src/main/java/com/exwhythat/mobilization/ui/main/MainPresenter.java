@@ -7,8 +7,13 @@ import com.exwhythat.mobilization.ui.base.BasePresenter;
  */
 
 public interface MainPresenter extends BasePresenter<MainView> {
-    void onDrawerWeatherClick();
+    void initCities();
+    void initCheckedCity();
+    void observeCheckedCity();
+    void observeCity();
+    void onDrawerWeatherClick(int id);
     void onDrawerAboutClick();
     void onDrawerSettingsClick();
     void onDrawerCitySelectionClick();
+    void onDrawerCityDeletingClick(int id, long checkedCityId);
 }
