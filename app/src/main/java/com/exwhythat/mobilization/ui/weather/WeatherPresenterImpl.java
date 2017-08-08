@@ -23,6 +23,8 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
         implements WeatherPresenter {
 
     private Disposable disposable = new CompositeDisposable();
+    private Disposable checkedCityDisposable = new CompositeDisposable();
+    private Disposable weatherDisposable = new CompositeDisposable();
 
     private WeatherRepository remoteRepo;
     private WeatherRepository localRepo;
@@ -42,7 +44,7 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
 
     @Override
     public void observeCheckedCity() {
-        cityRepository.observeCheckedCity()
+        checkedCityDisposable = cityRepository.observeCheckedCity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
@@ -53,7 +55,7 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
 
     @Override
     public void observeWeather() {
-        cityRepository.observeWeather()
+        weatherDisposable = cityRepository.observeWeather()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
@@ -111,6 +113,8 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
 
     private void onError(Throwable throwable) {
         disposable.dispose();
+        checkedCityDisposable.dispose();
+        weatherDisposable.dispose();
         WeatherView v = getMvpView();
         if (v != null) v.showError(throwable);
     }

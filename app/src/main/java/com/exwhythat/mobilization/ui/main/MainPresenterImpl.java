@@ -26,6 +26,7 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
     private LocalCityRepository repository;
     private List<City> cities = new ArrayList<>();
     private Disposable disposable = new CompositeDisposable();
+    private Disposable cityDisposable = new CompositeDisposable();
 
     @Inject
     public MainPresenterImpl(LocalCityRepository repository) {
@@ -51,13 +52,15 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
 
     @Override
     public void initCheckedCity() {
-        repository.initCheckedCity();
+        disposable = repository.initCheckedCity()
+            .subscribeOn(Schedulers.io())
+            .subscribe();
         onDrawerCitySelectionClick();
     }
 
     @Override
     public void observeCheckedCity() {
-        repository.observeCheckedCity()
+        disposable = repository.observeCheckedCity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
@@ -71,15 +74,15 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
 
     @Override
     public void observeCity() {
-        repository.observeCity()
+        cityDisposable = repository.observeCity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
                     if (getMvpView() != null) {
-                        if (change.getClass() == DatabaseChange.DatabaseInsert.class) {
-                            getMvpView().addCity(change.entity());
-                        } else {
+                        if (change.getClass() == DatabaseChange.DatabaseDelete.class) {
                             getMvpView().deleteCity((int) change.entity().getId());
+                        } else {
+                            getMvpView().addCity(change.entity());
                         }
                     }
                 });
@@ -89,7 +92,7 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
 
     @Override
     public void onDrawerWeatherClick(int id) {
-        repository.changeCheckedCity(id)
+        disposable = repository.changeCheckedCity(id)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -120,7 +123,7 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
 
     @Override
     public void onDrawerCityDeletingClick(int id, long checkedCityId) {
-        repository.deleteCity(id)
+        disposable = repository.deleteCity(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> {
@@ -136,7 +139,7 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
     @Override
     public void onDetach() {
         disposable.dispose();
-        repository = null;
+        cityDisposable.dispose();
         super.onDetach();
     }
 }

@@ -60,9 +60,8 @@ public class LocalCityRepository implements CityRepository {
         return database.query(City.class, "_id>?", "0").toObservable();
     }
 
-    public void initCheckedCity() {
-        database.put(new City()).subscribeOn(Schedulers.io()).subscribe();
-        database.put(new CheckedCity()).subscribeOn(Schedulers.io()).subscribe();
+    public Single<CheckedCity> initCheckedCity() {
+        return database.put(new City()).flatMap(city -> database.put(new CheckedCity()));
     }
 
     public Single<CheckedCity> getCheckedId() {
@@ -84,6 +83,7 @@ public class LocalCityRepository implements CityRepository {
     public Single<City> deleteCity(int id) {
         return database.delete(City.class, id)
                 .flatMap(item -> database.query(database.buildQuery(City.class)
+                        .withSelection("_id>?", "0")
                         .orderBy("_id"))
                         .first(new City()));
     }

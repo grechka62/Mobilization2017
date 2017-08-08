@@ -67,6 +67,7 @@ public class MainActivity extends BaseActivity
     private boolean isHomeAsUp = false;
 
     private long checkedCityId;
+    private int cityCount;
     private boolean recreate;
 
     @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT, FragmentCodes.CITY_SELECTION})
@@ -128,7 +129,8 @@ public class MainActivity extends BaseActivity
         if (checkedCity != 0) {
             menu.clear();
             MenuItem item;
-            for (int i = 0; i < cities.size(); i++) {
+            cityCount = cities.size();
+            for (int i = 0; i < cityCount; i++) {
                 int itemId = (int) cities.get(i).getId();
                 menu.add(R.id.topItems, itemId, i, cities.get(i).getName());
                 item = menu.getItem(i);
@@ -137,11 +139,11 @@ public class MainActivity extends BaseActivity
                 item.getActionView().findViewById(R.id.delete_city_but)
                         .setOnClickListener(view -> presenter.onDrawerCityDeletingClick(itemId, checkedCityId));
             }
-            menu.add(R.id.botItems, R.id.nav_add_city, cities.size(), getResources().getString(R.string.action_add_city));
+            menu.add(R.id.botItems, R.id.nav_add_city, cityCount, getResources().getString(R.string.action_add_city));
             menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
-            menu.add(R.id.botItems, R.id.nav_settings, cities.size() + 1, getResources().getString(R.string.action_settings));
+            menu.add(R.id.botItems, R.id.nav_settings, cityCount + 1, getResources().getString(R.string.action_settings));
             menu.getItem(cities.size() + 1).setIcon(R.drawable.ic_settings);
-            menu.add(R.id.botItems, R.id.nav_about, cities.size() + 2, getResources().getString(R.string.action_about));
+            menu.add(R.id.botItems, R.id.nav_about, cityCount + 2, getResources().getString(R.string.action_about));
             menu.getItem(cities.size() + 2).setIcon(R.drawable.ic_help_outline);
         } else {
             presenter.initCheckedCity();
@@ -165,12 +167,18 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void addCity(City city) {
-        menu.add(R.id.topItems, (int) city.getId(), Menu.NONE, city.getName());
+        menu.add(R.id.topItems, (int) city.getId(), cityCount++, city.getName());
+        MenuItem item = menu.findItem((int) city.getId());
+        item.setIcon(R.drawable.ic_menu_send);
+        item.setActionView(R.layout.menu_city_item);
+        item.getActionView().findViewById(R.id.delete_city_but)
+                .setOnClickListener(view -> presenter.onDrawerCityDeletingClick((int) city.getId(), checkedCityId));
     }
 
     @Override
     public void deleteCity(int itemId) {
         menu.removeItem(itemId);
+        cityCount--;
     }
 
     @Override

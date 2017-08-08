@@ -78,7 +78,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     private void onSuccess(City city, int type) {
         disposable.dispose();
         if (type == TYPE_REMOTE) {
-            localRepo.putCity(city)
+            disposable = localRepo.putCity(city)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::showWeather);
@@ -86,7 +86,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
             if (city.getName() == null) {
                 getCityInfoFromHttp(city.getPlaceId());
             } else {
-                localRepo.changeCheckedCity(city.getId())
+                disposable = localRepo.changeCheckedCity(city.getId())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::showWeather);
