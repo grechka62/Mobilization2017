@@ -3,6 +3,7 @@ package com.exwhythat.mobilization.repository.cityRepository;
 import com.exwhythat.mobilization.model.CheckedCity;
 import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
+import com.exwhythat.mobilization.model.part.Weather;
 import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 
 import javax.inject.Inject;
@@ -76,12 +77,9 @@ public class LocalCityRepository implements CityRepository {
         return database.changes(City.class);
     }
 
-    public Flowable<DatabaseChange<WeatherItem>> observeWeather() {
-        return database.changes(WeatherItem.class);
-    }
-
     public Single<City> deleteCity(int id) {
         return database.delete(City.class, id)
+                .flatMap(item -> database.delete(WeatherItem.class, "city_id=?", Integer.toString(id)))
                 .flatMap(item -> database.query(database.buildQuery(City.class)
                         .withSelection("_id>?", "0")
                         .orderBy("_id"))

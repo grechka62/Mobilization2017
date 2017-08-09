@@ -11,8 +11,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import nl.nl2312.rxcupboard2.DatabaseChange;
 
 /**
  * Created by exwhythat on 16.07.17.
@@ -63,5 +65,10 @@ public class RemoteWeatherRepository implements WeatherRepository {
     @Override
     public Observable<WeatherItem> putWeatherList(List<WeatherItem> weatherList) {
         return Observable.fromIterable(weatherList);
+    }
+
+    @Override
+    public Flowable<DatabaseChange<WeatherItem>> observeWeather() {
+        return Flowable.just(new DatabaseChange.DatabaseUpdate());
     }
 }

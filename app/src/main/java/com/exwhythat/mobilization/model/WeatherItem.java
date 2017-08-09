@@ -22,7 +22,7 @@ import nl.qbusict.cupboard.annotation.Ignore;
 public class WeatherItem {
     @IntDef({WeatherTypes.CURRENT, WeatherTypes.TODAY, WeatherTypes.FORECAST})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface WeatherTypes {
+    public  @interface WeatherTypes {
         int CURRENT = 0;
         int TODAY = 1;
         int FORECAST = 2;
@@ -50,6 +50,7 @@ public class WeatherItem {
         humidity = main.getHumidity();
         windSpeed = response.getWind().getSpeed();
         windDegree = response.getWind().getDegree();
+        type = WeatherTypes.CURRENT;
     }
 
     public WeatherItem(ForecastResponse response) {
@@ -60,6 +61,7 @@ public class WeatherItem {
         humidity = response.getHumidity();
         windSpeed = response.getWindSpeed();
         windDegree = response.getWindDegree();
+        type = WeatherTypes.FORECAST;
     }
 
     public void setId(long id) {

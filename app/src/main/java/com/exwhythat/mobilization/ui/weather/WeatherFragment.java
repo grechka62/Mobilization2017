@@ -4,6 +4,8 @@ package com.exwhythat.mobilization.ui.weather;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +17,11 @@ import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
+import com.exwhythat.mobilization.ui.citySelection.CitySelectionAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -38,6 +42,10 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
 
     private TextView tvResult;
     private TextView tvError;
+
+    private RecyclerView forecastList;
+    private ForecastAdapter forecastAdapter;
+    private LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
     public WeatherFragment() {}
 
@@ -72,6 +80,14 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
         tvResult = ButterKnife.findById(view, R.id.tvResult);
         tvError = ButterKnife.findById(view, R.id.tvError);
+        forecastList = ButterKnife.findById(view, R.id.forecast_recycler);
+
+        if (forecastAdapter == null) {
+            forecastAdapter = new ForecastAdapter();
+            forecastList.setLayoutManager(layoutManager);
+            forecastList.setAdapter(forecastAdapter);
+        }
+        //forecastAdapter.setListener(this);
     }
 
     @Override
@@ -106,11 +122,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         tvResult.setVisibility(View.GONE);
         pbLoading.setVisibility(View.VISIBLE);
         tvError.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideLoading() {
-        pbLoading.setVisibility(View.GONE);
+        forecastAdapter.clear();
     }
 
     @Override
@@ -118,7 +130,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         checkedCityId = item.getCity();
         getArguments().putLong(CHECKED_CITY, checkedCityId);
         // TODO: extract data-related stuff to separate class
-        Date date = new Date(item.getUpdateTime() * 1000);
+        Date date = new Date(item.getUpdateTime());
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         // TODO: make a good layout for weather representation or use string holders
@@ -127,6 +139,17 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         tvResult.setVisibility(View.VISIBLE);
         pbLoading.setVisibility(View.GONE);
         tvError.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showForecast(List<WeatherItem> forecast) {
+        forecastAdapter.addAll(forecast);
+        forecastAdapter.notifyDataSetChanged();
+    }
+
+    public void showForecastItem(WeatherItem weatherItem) {
+        forecastAdapter.add(weatherItem);
+        forecastAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -8,8 +8,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import nl.nl2312.rxcupboard2.DatabaseChange;
 import nl.nl2312.rxcupboard2.RxDatabase;
 
 /**
@@ -80,6 +82,29 @@ public class LocalWeatherRepository implements WeatherRepository {
 
     @Override
     public Observable<WeatherItem> putWeatherList(List<WeatherItem> weatherList) {
-        return Observable.fromIterable(weatherList).doOnNext(database::put);
+        final long[] id = new long[1];
+        return clearForecastForCity(weatherList.get(0).getCity())
+                .flatMapObservable(curWeatherId -> {
+                    id[0] = curWeatherId.getId();
+                    return Observable.fromIterable(weatherList)
+                            .flatMap(weatherItem -> {
+                                id[0] = (id[0] + 1) % Long.MAX_VALUE;
+                                weatherItem.setId(id[0]);
+                                return database.put(weatherItem).toObservable();
+                            });
+                });
+    }
+
+    private Single<WeatherItem> clearForecastForCity(long cityId) {
+        return database.delete(WeatherItem.class, "city_id=? and type=?", Long.toString(cityId), "2")
+                .flatMap(item -> database.query(
+                        database.buildQuery(WeatherItem.class)
+                                .orderBy("_id desc"))
+                        .first(new WeatherItem()));
+    }
+
+    @Override
+    public Flowable<DatabaseChange<WeatherItem>> observeWeather() {
+        return database.changes(WeatherItem.class);
     }
 }
