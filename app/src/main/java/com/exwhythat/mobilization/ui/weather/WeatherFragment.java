@@ -17,7 +17,6 @@ import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
-import com.exwhythat.mobilization.ui.citySelection.CitySelectionAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,7 +86,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
             forecastList.setLayoutManager(layoutManager);
             forecastList.setAdapter(forecastAdapter);
         }
-        //forecastAdapter.setListener(this);
     }
 
     @Override
@@ -97,14 +95,14 @@ public class WeatherFragment extends BaseFragment implements WeatherView {
         presenter.onAttach(this);
         presenter.observeCheckedCity();
         presenter.observeWeather();
-        presenter.onPrefsChanged(checkedCityId);
+        presenter.obtainWeather(checkedCityId);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                presenter.onRefreshData();
+                presenter.refreshWeather();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

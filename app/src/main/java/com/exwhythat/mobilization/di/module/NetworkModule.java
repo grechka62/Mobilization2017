@@ -6,8 +6,8 @@ import com.exwhythat.mobilization.BuildConfig;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.network.WeatherApi;
 import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
-import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
-import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
+import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepositoryImpl;
+import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepositoryImpl;
 import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
@@ -48,7 +48,7 @@ public class NetworkModule {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             builder.addNetworkInterceptor(new StethoInterceptor())
                     .addInterceptor(loggingInterceptor);
         }
@@ -86,13 +86,13 @@ public class NetworkModule {
     @NonNull
     @Singleton
     WeatherRepository provideRemoteWeatherRepository(WeatherApi weatherApi) {
-        return new RemoteWeatherRepository(weatherApi);
+        return new RemoteWeatherRepositoryImpl(weatherApi);
     }
 
     @Provides
     @NonNull
     @Singleton
     CityRepository provideRemoteCityRepository(CityApi cityApi) {
-        return new RemoteCityRepository(cityApi);
+        return new RemoteCityRepositoryImpl(cityApi);
     }
 }

@@ -36,8 +36,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Inject
     CitySelectionPresenter presenter;
 
-    private EditText editCity;
-    private TextView placeId;
     private TextView hint;
     private ProgressBar loading;
 
@@ -67,7 +65,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editCity = ButterKnife.findById(view, R.id.edit_city);
+        EditText editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
         hint = ButterKnife.findById(view, R.id.city_input_hint);
         loading = ButterKnife.findById(view, R.id.loading_suggest);
@@ -77,7 +75,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
         suggestList.setAdapter(suggestAdapter);
         suggestAdapter.setListener(this);
 
-        presenter.onTextChanges(RxTextView.textChanges(editCity)
+        presenter.observeCityInput(RxTextView.textChanges(editCity)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .filter(text -> text.length() > 0));
     }
@@ -110,8 +108,8 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     @Override
     public void onClick(View view) {
-        placeId = view.findViewById(R.id.place_id);
-        presenter.onSuggestClick(placeId.getText());
+        TextView placeId = view.findViewById(R.id.place_id);
+        presenter.chooseCity(placeId.getText());
     }
 
     @Override

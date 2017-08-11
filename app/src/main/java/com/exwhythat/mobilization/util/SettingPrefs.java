@@ -33,7 +33,7 @@ public class SettingPrefs {
     }
 
     public static int getSettingsUpdateInterval(Context context) {
-        int defaultSeconds = BuildConfig.DEBUG ? UPDATE_INTERVAL_DEFAULT_DEBUG : UPDATE_INTERVAL_DEFAULT_RELEASE;
+        int defaultSeconds = /*BuildConfig.DEBUG ? UPDATE_INTERVAL_DEFAULT_DEBUG :*/ UPDATE_INTERVAL_DEFAULT_RELEASE;
         return getSettingsPrefs(context).getInt(KEY_SETTINGS_UPDATE_INTERVAL, defaultSeconds);
     }
 }

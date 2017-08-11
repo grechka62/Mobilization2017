@@ -2,9 +2,8 @@ package com.exwhythat.mobilization.network;
 
 import android.support.annotation.Nullable;
 
-import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.network.weatherResponse.ForecastWeatherResponse;
-import com.exwhythat.mobilization.network.weatherResponse.TodaysWeatherResponse;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -23,15 +22,10 @@ public interface WeatherApi {
                                                      @Nullable @Query("units") String tempUnits,
                                                      @Query("APPID") String key);
 
-    @GET("forecast")
-    Single<TodaysWeatherResponse> getTodayWeather(@Query("lat") double lan,
-                                                  @Query("lon") double lon,
-                                                  @Nullable @Query("units") String tempUnits,
-                                                  @Query("APPID") String key);
-
     @GET("forecast/daily")
     Single<ForecastWeatherResponse> getForecast(@Query("lat") double lan,
-                                               @Query("lon") double lon,
-                                               @Nullable @Query("units") String tempUnits,
-                                               @Query("APPID") String key);
+                                                @Query("lon") double lon,
+                                                @Query("cnt") int count,
+                                                @Nullable @Query("units") String tempUnits,
+                                                @Query("APPID") String key);
 }

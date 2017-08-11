@@ -8,20 +8,9 @@ import android.support.annotation.Nullable;
 
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.model.City;
-import com.exwhythat.mobilization.model.part.Location;
-import com.exwhythat.mobilization.network.WeatherApi;
-import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
-import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
-import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepository;
+import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepositoryImpl;
+import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepositoryImpl;
 import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
-import com.exwhythat.mobilization.util.CityPrefs;
-import com.exwhythat.mobilization.util.Constants;
-import com.exwhythat.mobilization.util.DataPrefs;
-import com.exwhythat.mobilization.util.SettingPrefs;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -42,9 +31,9 @@ public class WeatherService extends Service {
     @Inject
     WeatherRepository remoteRepo;
     @Inject
-    LocalWeatherRepository localRepo;
+    LocalWeatherRepositoryImpl localRepo;
     @Inject
-    LocalCityRepository cityRepo;
+    LocalCityRepositoryImpl cityRepo;
 
     private Disposable disposable;
 

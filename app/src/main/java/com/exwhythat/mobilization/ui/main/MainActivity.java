@@ -124,12 +124,12 @@ public class MainActivity extends BaseActivity
         presenter.initCities();
     }
 
-    public void setCitiesOnDrawer(List<City> cities, long checkedCity) {
+    public void setCitiesOnDrawer(List<City> cities) {
         menu = navigationView.getMenu();
-        if (checkedCity != 0) {
+        cityCount = cities.size();
+        if (cityCount > 0) {
             menu.clear();
             MenuItem item;
-            cityCount = cities.size();
             for (int i = 0; i < cityCount; i++) {
                 int itemId = (int) cities.get(i).getId();
                 menu.add(R.id.topItems, itemId, i, cities.get(i).getName());
@@ -137,8 +137,11 @@ public class MainActivity extends BaseActivity
                 item.setIcon(R.drawable.ic_menu_send);
                 item.setActionView(R.layout.menu_city_item);
                 item.getActionView().findViewById(R.id.delete_city_but)
-                        .setOnClickListener(view -> presenter.onDrawerCityDeletingClick(itemId, checkedCityId));
+                        .setOnClickListener(view -> presenter.deleteCity(itemId, checkedCityId));
             }
+
+            presenter.getCheckedCity();
+
             menu.add(R.id.botItems, R.id.nav_add_city, cityCount, getResources().getString(R.string.action_add_city));
             menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
             menu.add(R.id.botItems, R.id.nav_settings, cityCount + 1, getResources().getString(R.string.action_settings));
@@ -149,7 +152,6 @@ public class MainActivity extends BaseActivity
             presenter.initCheckedCity();
         }
         navigationView.setNavigationItemSelectedListener(this);
-        setCheckedCity((int) checkedCity);
     }
 
     @Override
@@ -172,7 +174,7 @@ public class MainActivity extends BaseActivity
         item.setIcon(R.drawable.ic_menu_send);
         item.setActionView(R.layout.menu_city_item);
         item.getActionView().findViewById(R.id.delete_city_but)
-                .setOnClickListener(view -> presenter.onDrawerCityDeletingClick((int) city.getId(), checkedCityId));
+                .setOnClickListener(view -> presenter.deleteCity((int) city.getId(), checkedCityId));
     }
 
     @Override
@@ -209,16 +211,16 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_settings:
-                presenter.onDrawerSettingsClick();
+                presenter.goToSettings();
                 break;
             case R.id.nav_about:
-                presenter.onDrawerAboutClick();
+                presenter.goToAbout();
                 break;
             case R.id.nav_add_city:
-                presenter.onDrawerCitySelectionClick();
+                presenter.goToCitySelection();
                 break;
             default:
-                presenter.onDrawerWeatherClick(item.getItemId());
+                presenter.goToAnotherCityWeather(item.getItemId());
                 break;
         }
 

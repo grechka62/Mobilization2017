@@ -19,7 +19,7 @@ public interface MainView extends BaseView {
 
     void showCitySelection();
 
-    void setCitiesOnDrawer(List<City> cities, long checkedCity);
+    void setCitiesOnDrawer(List<City> cities);
 
     void setCheckedCity(int id);
 

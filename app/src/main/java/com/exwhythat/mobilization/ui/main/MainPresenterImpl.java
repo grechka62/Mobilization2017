@@ -1,8 +1,8 @@
 package com.exwhythat.mobilization.ui.main;
 
-import com.exwhythat.mobilization.model.CheckedCity;
 import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepository;
+import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepositoryImpl;
 import com.exwhythat.mobilization.ui.base.BasePresenterImpl;
 
 import java.util.ArrayList;
@@ -24,52 +24,77 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
         implements MainPresenter {
 
     private LocalCityRepository repository;
-    private List<City> cities = new ArrayList<>();
+
     private Disposable disposable = new CompositeDisposable();
     private Disposable cityDisposable = new CompositeDisposable();
+    private Disposable checkedCityDisposable = new CompositeDisposable();
+
+    private List<City> cities = new ArrayList<>();
 
     @Inject
-    public MainPresenterImpl(LocalCityRepository repository) {
+    public MainPresenterImpl(LocalCityRepositoryImpl repository) {
         this.repository = repository;
     }
 
     @Override
     public void initCities() {
         cities.clear();
-        final CheckedCity[] checked = new CheckedCity[1];
-        disposable = repository.getCheckedId()
-                .flatMapObservable(checkedCity -> {
-                    checked[0] = checkedCity;
-                    return repository.getAllCities();
-                })
+        disposable = repository.getAllCities()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(cities::add, this::onError, () -> {
-                            if (getMvpView() != null)
-                                getMvpView().setCitiesOnDrawer(cities, checked[0].getCityId());
-                        });
+                .subscribe(cities::add, this::onError, this::showCitiesList);
+    }
+
+    private void showCitiesList() {
+        if (getMvpView() != null) {
+            getMvpView().setCitiesOnDrawer(cities);
+        }
+    }
+
+    private void onError(Throwable t) {
+        t.printStackTrace();
     }
 
     @Override
     public void initCheckedCity() {
         disposable = repository.initCheckedCity()
-            .subscribeOn(Schedulers.io())
-            .subscribe();
-        onDrawerCitySelectionClick();
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> goToCitySelection(), this::onError);
+    }
+
+    @Override
+    public void getCheckedCity() {
+        disposable = repository.getCheckedId()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(checkedCity -> setCheckedCity(checkedCity.getCityId()));
+    }
+
+    private void setCheckedCity(long id) {
+        if (getMvpView() != null) {
+            getMvpView().setCheckedCity((int) id);
+        }
     }
 
     @Override
     public void observeCheckedCity() {
-        disposable = repository.observeCheckedCity()
+        checkedCityDisposable = repository.observeCheckedCity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
-                    MainView v = getMvpView();
-                    if ((v != null) && (change.entity().getCityId() != 0)) {
-                        v.setCheckedCity((int) change.entity().getCityId());
-                        v.showWeather();
+                    if (change.entity().getCityId() != 0) {
+                        showCheckedCityChange(change.entity().getCityId());
                     }
                 });
+    }
+
+    private void showCheckedCityChange(long id) {
+        MainView v = getMvpView();
+        if (v != null) {
+            v.setCheckedCity((int) id);
+            v.showWeather();
+        }
     }
 
     @Override
@@ -78,43 +103,48 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(change -> {
-                    if (getMvpView() != null) {
-                        if (change.getClass() == DatabaseChange.DatabaseDelete.class) {
-                            getMvpView().deleteCity((int) change.entity().getId());
-                        } else {
-                            getMvpView().addCity(change.entity());
-                        }
+                    if (change.getClass() == DatabaseChange.DatabaseDelete.class) {
+                        showCityDeleting(change.entity().getId());
+                    } else {
+                        showCityAddition(change.entity());
                     }
                 });
     }
 
-    private void onError(Throwable t){}
+    @Override
+    public void deleteCity(int id, long checkedCityId) {
+        disposable = repository.deleteCity(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item -> {
+                    showCityDeleting(id);
+                    if (id == checkedCityId) {
+                        goToAnotherCityWeather((int) item.getId());
+                    }
+                });
+    }
+
+    private void showCityDeleting(long id) {
+        if (getMvpView() != null) {
+            getMvpView().deleteCity((int) id);
+        }
+    }
+
+    private void showCityAddition(City city) {
+        if (getMvpView() != null) {
+            getMvpView().addCity(city);
+        }
+    }
 
     @Override
-    public void onDrawerWeatherClick(int id) {
+    public void goToAnotherCityWeather(int id) {
         disposable = repository.changeCheckedCity(id)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
 
     @Override
-    public void onDrawerAboutClick() {
-        MainView view = getMvpView();
-        if (view != null) {
-            view.showAbout();
-        }
-    }
-
-    @Override
-    public void onDrawerSettingsClick() {
-        MainView view = getMvpView();
-        if (view != null) {
-            view.showSettings();
-        }
-    }
-
-    @Override
-    public void onDrawerCitySelectionClick() {
+    public void goToCitySelection() {
         MainView view = getMvpView();
         if (view != null) {
             view.showCitySelection();
@@ -122,24 +152,26 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
     }
 
     @Override
-    public void onDrawerCityDeletingClick(int id, long checkedCityId) {
-        disposable = repository.deleteCity(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(item -> {
-                    if (id == checkedCityId) {
-                        onDrawerWeatherClick((int) item.getId());
-                    }
-                    if (getMvpView() != null) getMvpView().deleteCity(id);
-                });
+    public void goToSettings() {
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showSettings();
+        }
     }
 
-
+    @Override
+    public void goToAbout() {
+        MainView view = getMvpView();
+        if (view != null) {
+            view.showAbout();
+        }
+    }
 
     @Override
     public void onDetach() {
         disposable.dispose();
         cityDisposable.dispose();
+        checkedCityDisposable.dispose();
         super.onDetach();
     }
 }

@@ -7,8 +7,12 @@ import com.exwhythat.mobilization.ui.base.BasePresenter;
  */
 
 public interface WeatherPresenter extends BasePresenter<WeatherView> {
+
     void observeCheckedCity();
+
     void observeWeather();
-    void onRefreshData();
-    void onPrefsChanged(long cityId);
+
+    void refreshWeather();
+
+    void obtainWeather(long cityId);
 }
