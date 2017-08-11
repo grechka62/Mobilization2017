@@ -1,7 +1,7 @@
 package com.exwhythat.mobilization.repositories;
 
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepository;
+import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepositoryImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import java.util.Calendar;
 import io.reactivex.Single;
 import nl.nl2312.rxcupboard2.RxDatabase;
 import utils.CaptorUtils;
-import utils.Yanswers;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,18 +30,18 @@ import static org.mockito.Mockito.when;
  * Created by Grechka on 10.08.2017.
  */
 
-public class LocalWeatherRepositoryUnitTest {
+public class LocalWeatherRepositoryImplUnitTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     RxDatabase database;
 
-    private LocalWeatherRepository repository;
+    private LocalWeatherRepositoryImpl repository;
 
     @Before
     public void onInit() {
         MockitoAnnotations.initMocks(this);
         Calendar calendar = Calendar.getInstance();
-        repository = new LocalWeatherRepository(database, calendar);
+        repository = new LocalWeatherRepositoryImpl(database, calendar);
     }
 
     @Test
@@ -53,7 +52,7 @@ public class LocalWeatherRepositoryUnitTest {
 
         when(database.delete(eq(WeatherItem.class), anyString(), any())).thenReturn(Single.just(0L));
 
-        repository.putWeatherList(singletonList(item));
+        repository.putForecast(singletonList(item));
 
         ArgumentCaptor<String> captor = CaptorUtils.captor(String.class);
         verify(database).delete(eq(WeatherItem.class), anyString(), captor.capture());
@@ -64,7 +63,7 @@ public class LocalWeatherRepositoryUnitTest {
     @Test
     public void throws_whenCitiesHaveNotSameId() {
         try {
-            repository.putWeatherList(new ArrayList<WeatherItem>() {{
+            repository.putForecast(new ArrayList<WeatherItem>() {{
                 add(new WeatherItem(){{setCity(42);}});
                 add(new WeatherItem(){{setCity(43);}});
             }});

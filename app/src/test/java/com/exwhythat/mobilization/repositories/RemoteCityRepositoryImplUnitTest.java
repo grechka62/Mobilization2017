@@ -1,15 +1,15 @@
 package com.exwhythat.mobilization.repositories;
 
-import com.exwhythat.mobilization.model.CityInfo;
+import com.exwhythat.mobilization.model.City;
+import com.exwhythat.mobilization.model.part.Location;
 import com.exwhythat.mobilization.network.CityApi;
 import com.exwhythat.mobilization.network.cityResponse.CityResponse;
-import com.exwhythat.mobilization.network.cityResponse.part.Geometry;
-import com.exwhythat.mobilization.network.cityResponse.part.Location;
-import com.exwhythat.mobilization.network.cityResponse.part.Result;
+import com.exwhythat.mobilization.network.cityResponse.Geometry;
+import com.exwhythat.mobilization.network.cityResponse.Result;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.network.suggestResponse.SuggestResponse;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.exwhythat.mobilization.repository.cityRepository.CityRepository;
-import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepository;
+import com.exwhythat.mobilization.repository.cityRepository.RemoteCityRepositoryImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
  * Created by Grechka on 30.07.2017.
  */
 
-public class RemoteCityRepositoryUnitTest {
+public class RemoteCityRepositoryImplUnitTest {
     private final String CITY_NAME = "Moscow";
     private final double CITY_LATITUDE = 55.75222;
     private final double CITY_LONGITUDE = 37.615555;
@@ -38,13 +38,13 @@ public class RemoteCityRepositoryUnitTest {
     CityApi cityApi;
 
     private CityRepository repo;
-    private CityInfo city = new CityInfo(CITY_NAME, CITY_LATITUDE, CITY_LONGITUDE);;
+    private City city = new City(CITY_NAME, CITY_LATITUDE, CITY_LONGITUDE);;
     private Prediction[] predictions = new Prediction[2];
 
     @Before
     public void onInit() {
         MockitoAnnotations.initMocks(this);
-        repo = new RemoteCityRepository(cityApi);
+        repo = new RemoteCityRepositoryImpl(cityApi);
         predictions[0] = new Prediction("Moscow, Russia", "ChIJybDUc_xKtUYRTM9XV8zWRD0");
         predictions[1] = new Prediction("Moscow, ID, United States", "ChIJ0WHAIi0hoFQRbK3q5g0V_T4");
     }
@@ -86,7 +86,7 @@ public class RemoteCityRepositoryUnitTest {
         when(cityApi.getCityInfo("id", CityApi.CITY_API_KEY_VALUE))
                 .thenReturn(Single.just(cityResponse));
 
-        TestObserver<CityInfo> observer = repo.getCityInfo("id").test();
+        TestObserver<City> observer = repo.getCityInfo("id").test();
         observer
                 .assertNoErrors()
                 .assertValueCount(1)
@@ -98,7 +98,7 @@ public class RemoteCityRepositoryUnitTest {
         when(cityApi.getCityInfo("id", CityApi.CITY_API_KEY_VALUE))
                 .thenReturn(Single.just(new CityResponse(null)));
 
-        TestObserver<CityInfo> observer = repo.getCityInfo("id").test();
+        TestObserver<City> observer = repo.getCityInfo("id").test();
         observer
                 .assertTerminated()
                 .assertError(Exception.class);

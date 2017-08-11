@@ -34,7 +34,7 @@ public class CitySelectionFragmentInstrumentedTest {
     @Before
     public void goToCitySelection() {
         onView(withClassName(equalTo(AppCompatImageButton.class.getName()))).perform(click());
-        onView(withText(R.string.action_city_selection)).perform(click());
+        onView(withText(R.string.action_add_city)).perform(click());
         onView(withId(R.id.edit_city)).perform(typeText("k"));
         SystemClock.sleep(400);
     }

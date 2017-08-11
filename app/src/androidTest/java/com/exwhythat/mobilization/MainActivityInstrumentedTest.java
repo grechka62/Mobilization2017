@@ -43,7 +43,7 @@ public class MainActivityInstrumentedTest {
 
     @Test
     public void mainActivity_goToCitySelection() {
-        onView(withText(R.string.action_city_selection)).check(matches(isDisplayed())).perform(click());
+        onView(withText(R.string.action_add_city)).check(matches(isDisplayed())).perform(click());
         onView(withId(R.id.edit_city)).check(matches(isDisplayed()));
     }
 

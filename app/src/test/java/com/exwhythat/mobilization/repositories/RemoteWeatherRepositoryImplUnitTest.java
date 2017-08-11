@@ -2,12 +2,14 @@ package com.exwhythat.mobilization.repositories;
 
 import android.content.Context;
 
+import com.exwhythat.mobilization.model.City;
+import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.network.WeatherApi;
-import com.exwhythat.mobilization.network.cityResponse.part.Location;
+import com.exwhythat.mobilization.model.part.Location;
 import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
-import com.exwhythat.mobilization.network.weatherResponse.part.Main;
-import com.exwhythat.mobilization.network.weatherResponse.part.Weather;
-import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepository;
+import com.exwhythat.mobilization.model.part.Main;
+import com.exwhythat.mobilization.model.part.Weather;
+import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepositoryImpl;
 import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
 import com.exwhythat.mobilization.util.Constants;
 import com.exwhythat.mobilization.util.DataPrefs;
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.when;
  * Created by Grechka on 30.07.2017.
  */
 
-public class RemoteWeatherRepositoryUnitTest {
+public class RemoteWeatherRepositoryImplUnitTest {
     private final double CITY_LATITUDE = 55.75222;
     private final double CITY_LONGITUDE = 37.615555;
 
@@ -45,22 +47,22 @@ public class RemoteWeatherRepositoryUnitTest {
     @Before
     public void onInit() {
         MockitoAnnotations.initMocks(this);
-        repo = new RemoteWeatherRepository(weatherApi, context);
+        repo = new RemoteWeatherRepositoryImpl(weatherApi);
     }
 
     @Test
     public void shouldGetCorrectCurrentWeather() {
         List<Weather> weatherList = new ArrayList<>();
-        Weather weather = new Weather("main", "description");
+        Weather weather = new Weather("description");
         weatherList.add(weather);
         WeatherResponse weatherResponse = new WeatherResponse(new Main(30.0), weatherList, 30);
 
-        when(weatherApi.getWeatherForCity(CITY_LATITUDE, CITY_LONGITUDE,
+        when(weatherApi.getCurrentWeatherForCity(CITY_LATITUDE, CITY_LONGITUDE,
                 Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE))
                 .thenReturn(Single.just(weatherResponse));
 
-        TestObserver<WeatherResponse> observer =
-                repo.getCurrentWeather(new Location(CITY_LATITUDE, CITY_LONGITUDE)).test();
+        TestObserver<WeatherItem> observer =
+                repo.getCurrentWeather(new City("", CITY_LATITUDE, CITY_LONGITUDE)).test();
         observer
                 .assertError(NullPointerException.class)
                 .assertTerminated();
@@ -68,12 +70,12 @@ public class RemoteWeatherRepositoryUnitTest {
 
     @Test
     public void shouldGetWrongCurrentWeather() {
-        when(weatherApi.getWeatherForCity(CITY_LATITUDE, CITY_LONGITUDE,
+        when(weatherApi.getCurrentWeatherForCity(CITY_LATITUDE, CITY_LONGITUDE,
                 Constants.Units.METRIC, WeatherApi.WEATHER_API_KEY_VALUE))
                 .thenReturn(Single.just(new WeatherResponse(null, null, 0)));
 
-        TestObserver<WeatherResponse> observer =
-                repo.getCurrentWeather(new Location(CITY_LATITUDE, CITY_LONGITUDE)).test();
+        TestObserver<WeatherItem> observer =
+                repo.getCurrentWeather(new City("", CITY_LATITUDE, CITY_LONGITUDE)).test();
         observer
                 .assertTerminated()
                 .assertError(Exception.class);
