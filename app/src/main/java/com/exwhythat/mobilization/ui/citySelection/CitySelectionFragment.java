@@ -1,5 +1,8 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,9 +39,9 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Inject
     CitySelectionPresenter presenter;
 
-    private TextView hint;
     private ProgressBar loading;
 
+    private EditText editCity;
     private RecyclerView suggestList;
     private CitySelectionAdapter suggestAdapter;
     private LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -58,16 +61,24 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_city_selection, container, false);
+        View v = inflater.inflate(R.layout.fragment_city_selection, container, false);
+        editCity = ButterKnife.findById(v, R.id.edit_city);
+
+        /*ShapeDrawable shape = new ShapeDrawable(new RectShape());
+        shape.getPaint().setColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
+        shape.getPaint().setStyle(Paint.Style.STROKE);
+        shape.getPaint().setStrokeWidth(8);*/
+
+        // Assign the created border to EditText widget
+        //editCity.setBackgroundResource(R.drawable.edittext_border);
+        return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        EditText editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
-        hint = ButterKnife.findById(view, R.id.city_input_hint);
         loading = ButterKnife.findById(view, R.id.loading_suggest);
 
         suggestAdapter = new CitySelectionAdapter();
@@ -114,7 +125,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     @Override
     public void showLoading() {
-        hint.setVisibility(View.GONE);
         suggestList.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
     }
@@ -127,7 +137,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void showError(Throwable throwable) {
         loading.setVisibility(View.GONE);
-        hint.setVisibility(View.VISIBLE);
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
         Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
     }
