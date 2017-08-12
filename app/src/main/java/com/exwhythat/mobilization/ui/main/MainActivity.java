@@ -1,6 +1,8 @@
 package com.exwhythat.mobilization.ui.main;
 
 import android.animation.ValueAnimator;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.IntDef;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
@@ -17,8 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
@@ -42,6 +47,8 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
+import static android.R.attr.width;
+
 public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
@@ -53,13 +60,14 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    SlidingPaneLayout paneLayout;
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
     Menu menu;
+    TextView title;
 
     private ActionBarDrawerToggle drawerToggle;
     private DrawerArrowDrawable homeDrawable;
@@ -69,6 +77,7 @@ public class MainActivity extends BaseActivity
     private long checkedCityId;
     private int cityCount;
     private boolean recreate;
+    private boolean usePane;
 
     @IntDef({FragmentCodes.WEATHER, FragmentCodes.SETTINGS, FragmentCodes.ABOUT, FragmentCodes.CITY_SELECTION})
     @Retention(RetentionPolicy.SOURCE)
@@ -85,6 +94,13 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         App.getComponent().inject(this);
         setUnbinder(ButterKnife.bind(this));
+        usePane = getResources().getConfiguration().screenWidthDp >= 720;
+        if (usePane) {
+            paneLayout = ButterKnife.findById(this, R.id.drawer_layout);
+
+        } else {
+            drawerLayout = ButterKnife.findById(this, R.id.drawer_layout);
+        }
         presenter.onAttach(this);
 
         recreate = savedInstanceState != null;
@@ -96,7 +112,7 @@ public class MainActivity extends BaseActivity
         presenter.observeCheckedCity();
         presenter.observeCity();
 
-        if (recreate && (getSupportFragmentManager().getBackStackEntryCount() > 0)) {
+        if (recreate && (getSupportFragmentManager().getBackStackEntryCount() > 0) && (!usePane)) {
             setHomeAsUp(true);
         }
 
@@ -106,24 +122,32 @@ public class MainActivity extends BaseActivity
     private void initToolbar() {
         setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
-        homeDrawable = new DrawerArrowDrawable(toolbar.getContext());
-        toolbar.setNavigationIcon(homeDrawable);
-        toolbar.setNavigationOnClickListener(v -> {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START) || isHomeAsUp) {
-                onBackPressed();
-            } else {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
+        if (!usePane) {
+            homeDrawable = new DrawerArrowDrawable(toolbar.getContext());
+            toolbar.setNavigationIcon(homeDrawable);
+            toolbar.setNavigationOnClickListener(v -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START) || isHomeAsUp) {
+                    onBackPressed();
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+
+            });
+        }
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
-        drawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
+        if (!usePane) {
+            drawerToggle = new ActionBarDrawerToggle(
+                    this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.addDrawerListener(drawerToggle);
+        } else {
+            //paneLayout.setPanelSlideListener(this);
+        }
         presenter.initCities();
     }
 
+    @Override
     public void setCitiesOnDrawer(List<City> cities) {
         menu = navigationView.getMenu();
         cityCount = cities.size();
@@ -191,8 +215,10 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
+        if (!usePane) {
+            if (drawerToggle.onOptionsItemSelected(item)) {
+                return true;
+            }
         }
 
         switch (item.getItemId()) {
@@ -224,15 +250,26 @@ public class MainActivity extends BaseActivity
                 break;
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        if (!usePane) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            paneLayout.closePane();
+        }
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return;
+        if (usePane) {
+            if (paneLayout.isOpen()) {
+                paneLayout.closePane();
+                return;
+            }
+        } else {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return;
+            }
         }
         if (isRootFragmentVisible()) {
             super.onBackPressed();
@@ -358,10 +395,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackStackChanged() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            setHomeAsUp(true);
-        } else {
-            setHomeAsUp(false);
+        if (!usePane) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                setHomeAsUp(true);
+            } else {
+                setHomeAsUp(false);
+            }
         }
     }
 

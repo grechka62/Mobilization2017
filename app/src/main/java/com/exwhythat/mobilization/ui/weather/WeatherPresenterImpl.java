@@ -50,7 +50,6 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
     }
 
     private void onError(Throwable throwable) {
-        disposable.dispose();
         WeatherView v = getMvpView();
         if (v != null) v.showError(throwable);
     }
@@ -81,7 +80,6 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
     }
 
     private void showWeather(WeatherItem item) {
-        disposable.dispose();
         if (item.getCity() == checkedCityId) {
             if (item.getType() == WeatherItem.WeatherTypes.CURRENT) {
                 showResult(item);
