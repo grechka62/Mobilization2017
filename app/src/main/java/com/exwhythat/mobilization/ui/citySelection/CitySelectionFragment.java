@@ -62,15 +62,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_city_selection, container, false);
-        editCity = ButterKnife.findById(v, R.id.edit_city);
-
-        /*ShapeDrawable shape = new ShapeDrawable(new RectShape());
-        shape.getPaint().setColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
-        shape.getPaint().setStyle(Paint.Style.STROKE);
-        shape.getPaint().setStrokeWidth(8);*/
-
-        // Assign the created border to EditText widget
-        //editCity.setBackgroundResource(R.drawable.edittext_border);
         return v;
     }
 
@@ -78,6 +69,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
         loading = ButterKnife.findById(view, R.id.loading_suggest);
 
@@ -127,6 +119,11 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void showLoading() {
         suggestList.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        loading.setVisibility(View.GONE);
     }
 
     @Override

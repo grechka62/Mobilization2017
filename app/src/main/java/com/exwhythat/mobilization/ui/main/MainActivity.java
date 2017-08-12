@@ -1,10 +1,7 @@
 package com.exwhythat.mobilization.ui.main;
 
 import android.animation.ValueAnimator;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,8 +16,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -46,8 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-import static android.R.attr.width;
 
 public class MainActivity extends BaseActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
@@ -163,18 +156,16 @@ public class MainActivity extends BaseActivity
                 item.getActionView().findViewById(R.id.delete_city_but)
                         .setOnClickListener(view -> presenter.deleteCity(itemId, checkedCityId));
             }
-
             presenter.getCheckedCity();
-
-            menu.add(R.id.botItems, R.id.nav_add_city, cityCount, getResources().getString(R.string.action_add_city));
-            menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
-            menu.add(R.id.botItems, R.id.nav_settings, cityCount + 1, getResources().getString(R.string.action_settings));
-            menu.getItem(cities.size() + 1).setIcon(R.drawable.ic_settings);
-            menu.add(R.id.botItems, R.id.nav_about, cityCount + 2, getResources().getString(R.string.action_about));
-            menu.getItem(cities.size() + 2).setIcon(R.drawable.ic_help_outline);
         } else {
             presenter.initCheckedCity();
         }
+        menu.add(R.id.botItems, R.id.nav_add_city, cityCount+10, getResources().getString(R.string.action_add_city));
+        menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
+        menu.add(R.id.botItems, R.id.nav_settings, cityCount + 11, getResources().getString(R.string.action_settings));
+        menu.getItem(cities.size() + 1).setIcon(R.drawable.ic_settings);
+        menu.add(R.id.botItems, R.id.nav_about, cityCount + 12, getResources().getString(R.string.action_about));
+        menu.getItem(cities.size() + 2).setIcon(R.drawable.ic_help_outline);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -189,16 +180,6 @@ public class MainActivity extends BaseActivity
             recreate = true;
         }
         navigationView.setCheckedItem(id);
-    }
-
-    @Override
-    public void addCity(City city) {
-        menu.add(R.id.topItems, (int) city.getId(), cityCount++, city.getName());
-        MenuItem item = menu.findItem((int) city.getId());
-        item.setIcon(R.drawable.ic_menu_send);
-        item.setActionView(R.layout.menu_city_item);
-        item.getActionView().findViewById(R.id.delete_city_but)
-                .setOnClickListener(view -> presenter.deleteCity((int) city.getId(), checkedCityId));
     }
 
     @Override

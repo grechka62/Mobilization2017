@@ -106,11 +106,19 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
                     if (change.getClass() == DatabaseChange.DatabaseDelete.class) {
                         showCityDeleting(change.entity().getId());
                     } else {
-                        showCityAddition(change.entity());
+                        if (change.entity().getId() != 0) {
+                            showCityAddition(change.entity());
+                        }
                     }
                 });
     }
 
+    private void showCityAddition(City city) {
+        if (!cities.contains(city)) {
+            cities.add(city);
+            showCitiesList();
+        }
+    }
     @Override
     public void deleteCity(int id, long checkedCityId) {
         disposable = repository.deleteCity(id)
@@ -127,12 +135,6 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView>
     private void showCityDeleting(long id) {
         if (getMvpView() != null) {
             getMvpView().deleteCity((int) id);
-        }
-    }
-
-    private void showCityAddition(City city) {
-        if (getMvpView() != null) {
-            getMvpView().addCity(city);
         }
     }
 

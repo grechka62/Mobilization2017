@@ -12,6 +12,7 @@ public interface CitySelectionView extends BaseView {
     void clearSuggestions();
     void showCitySuggest(Prediction suggest);
     void showLoading();
+    void hideLoading();
     void showWeather();
     void showError(Throwable throwable);
 }

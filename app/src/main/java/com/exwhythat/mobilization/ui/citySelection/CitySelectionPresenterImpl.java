@@ -53,7 +53,7 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
         disposable = remoteRepo.getCitySuggest(input.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showCitySuggest, this::onError);
+                .subscribe(this::showCitySuggest, this::onError, this::hideLoading);
     }
 
     private void showCitySuggest(Prediction suggest) {
@@ -63,6 +63,11 @@ public class CitySelectionPresenterImpl extends BasePresenterImpl<CitySelectionV
     private void onError(Throwable throwable) {
         disposable.dispose();
         if (getMvpView() != null) getMvpView().showError(throwable);
+    }
+
+    private void hideLoading() {
+        disposable.dispose();
+        if (getMvpView() != null) getMvpView().hideLoading();
     }
 
     @Override

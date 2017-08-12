@@ -23,7 +23,5 @@ public interface MainView extends BaseView {
 
     void setCheckedCity(int id);
 
-    void addCity(City city);
-
     void deleteCity(int itemId);
 }
