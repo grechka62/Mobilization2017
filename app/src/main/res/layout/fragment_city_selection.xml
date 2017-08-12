@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/city_selection_fragment_layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/activity_horizontal_margin"
     android:clickable="true"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.MainActivity">
@@ -12,26 +13,40 @@
         android:id="@+id/edit_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textAutoComplete"/>
+        android:cursorVisible="true"
+        android:background="@drawable/edittext_border"
+        android:hint="@string/city_selection_message"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingEnd="@dimen/padding_normal"
+        android:inputType="textCapWords"
+        android:textSize="24sp" />
 
     <ProgressBar
         android:id="@+id/loading_suggest"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="32dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/suggest_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:visibility="gone"
+        android:clickable="true"
+        tools:listitem="@layout/row_city_suggestion" />
 
-    <TextView
-        android:id="@+id/city_input_hint"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/city_selection_message"/>
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/yandex_logo"
+        android:contentDescription="@string/yandex_logo"/>
 
 </LinearLayout>

@@ -11,5 +11,6 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_with_msg">Ошибка! Причина: %1$s</string>
 
-    <string name="city_selection_message">Введите название населенного пункта</string>
+    <string name="city_selection_message">Начните вводить</string>
+    <string name="yandex_logo">Логотип Яндекса</string>
 </resources>

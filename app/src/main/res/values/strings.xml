@@ -19,5 +19,7 @@
     <string name="hello_settings_fragment" translatable="false">Hello settings fragment</string>
     <string name="hello_about_fragment" translatable="false">Hello about fragment</string>
 
-    <string name="city_selection_message">Enter the name of the settlement</string>
+    <string name="city_selection_message">Begin to input</string>
+
+    <string name="yandex_logo">Yandex logo</string>
 </resources>
