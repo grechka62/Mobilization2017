@@ -45,12 +45,6 @@ public class AboutFragment extends BaseFragment implements AboutView {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_about);
-    }
-
-    @Override
     public void onDestroyView() {
         presenter.onDetach();
         super.onDestroyView();

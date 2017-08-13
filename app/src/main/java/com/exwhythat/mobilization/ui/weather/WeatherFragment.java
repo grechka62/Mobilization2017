@@ -92,7 +92,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_weather);
         presenter.onAttach(this);
         presenter.observeCheckedCity();
         presenter.observeWeather();

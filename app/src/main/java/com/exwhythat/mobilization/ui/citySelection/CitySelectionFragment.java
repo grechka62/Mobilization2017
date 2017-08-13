@@ -38,7 +38,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
 
     private ProgressBar loading;
 
-    private EditText editCity;
     private RecyclerView suggestList;
     private CitySelectionAdapter suggestAdapter;
     private LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -58,15 +57,14 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_city_selection, container, false);
-        return v;
+        return inflater.inflate(R.layout.fragment_city_selection, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editCity = ButterKnife.findById(view, R.id.edit_city);
+        EditText editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
         loading = ButterKnife.findById(view, R.id.loading_suggest);
 
@@ -83,7 +81,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_add_city);
         presenter.onAttach(this);
     }
 

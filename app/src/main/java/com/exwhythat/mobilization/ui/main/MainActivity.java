@@ -113,6 +113,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void initToolbar() {
+        setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
         if (!usePane) {
             homeDrawable = new DrawerArrowDrawable(toolbar.getContext());
@@ -259,21 +260,25 @@ public class MainActivity extends BaseActivity
     @Override
     public void showWeather() {
         showFragment(FragmentCodes.WEATHER);
+        toolbar.setTitle(R.string.action_weather);
     }
 
     @Override
     public void showAbout() {
         showFragment(FragmentCodes.ABOUT);
+        toolbar.setTitle(R.string.action_about);
     }
 
     @Override
     public void showSettings() {
         showFragment(FragmentCodes.SETTINGS);
+        toolbar.setTitle(R.string.action_settings);
     }
 
     @Override
     public void showCitySelection() {
         showFragment(FragmentCodes.CITY_SELECTION);
+        toolbar.setTitle(R.string.action_add_city);
     }
 
     /**
