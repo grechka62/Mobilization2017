@@ -48,8 +48,9 @@ public class WeatherInteractorImpl implements WeatherInteractor {
         return getSavedWeather(city)
                 .doOnNext(weatherList::add)
                 .doOnTerminate(() -> {
-                    if ((weatherList.size() < 11) ||
-                            (weatherList.get(9).getCity() != city.getId())) {
+                    if (!((weatherList.size() == 11) &&
+                            (weatherList.get(9).getCity() == city.getId())
+                            && (weatherList.get(10).getCity() == city.getId()))) {
                         updateWeather(city).subscribeOn(Schedulers.io()).subscribe();
                     }
                 });

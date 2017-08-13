@@ -1,23 +1,21 @@
 package com.exwhythat.mobilization.repositories;
 
-import android.content.Context;
-
 import com.exwhythat.mobilization.model.City;
 import com.exwhythat.mobilization.model.WeatherItem;
-import com.exwhythat.mobilization.network.WeatherApi;
-import com.exwhythat.mobilization.model.part.Location;
-import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.model.part.Main;
 import com.exwhythat.mobilization.model.part.Weather;
+import com.exwhythat.mobilization.network.WeatherApi;
+import com.exwhythat.mobilization.network.weatherResponse.WeatherResponse;
 import com.exwhythat.mobilization.repository.weatherRepository.RemoteWeatherRepositoryImpl;
 import com.exwhythat.mobilization.repository.weatherRepository.WeatherRepository;
 import com.exwhythat.mobilization.util.Constants;
-import com.exwhythat.mobilization.util.DataPrefs;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +29,13 @@ import static org.mockito.Mockito.when;
  * Created by Grechka on 30.07.2017.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class RemoteWeatherRepositoryImplUnitTest {
     private final double CITY_LATITUDE = 55.75222;
     private final double CITY_LONGITUDE = 37.615555;
 
     @Mock
     WeatherApi weatherApi;
-    @Mock
-    Context context;
-    @Mock
-    DataPrefs prefs;
 
     private WeatherRepository repo;
 

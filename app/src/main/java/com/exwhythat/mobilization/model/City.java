@@ -1,12 +1,10 @@
 package com.exwhythat.mobilization.model;
 
-import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 
 import com.exwhythat.mobilization.model.part.Location;
 import com.exwhythat.mobilization.network.cityResponse.CityResponse;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.exwhythat.mobilization.network.cityResponse.Result;
 
 import nl.qbusict.cupboard.annotation.Column;
 
@@ -15,12 +13,6 @@ import nl.qbusict.cupboard.annotation.Column;
  */
 
 public class City {
-    @IntDef({City.IsDefault.YES, City.IsDefault.NO})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface IsDefault {
-        int NO = 0;
-        int YES = 1;
-    }
 
     @Column("_id") private long id;
     @Column("place_id") private String placeId;
@@ -28,9 +20,12 @@ public class City {
     private double latitude;
     private double longitude;
 
-    public City() {}
+    public City() {
+        placeId = "";
+        name = "";
+    }
 
-    public City(City city) {
+    public City(@NonNull City city) {
         id = city.getId();
         placeId = city.getPlaceId();
         name = city.getName();
@@ -38,17 +33,23 @@ public class City {
         longitude = city.getLongitude();
     }
 
-    public City(CityResponse cityResponse) {
-        name = cityResponse.getResult().getName();
-        latitude = cityResponse.getResult().getGeometry().getLocation().getLat();
-        longitude = cityResponse.getResult().getGeometry().getLocation().getLng();
-        placeId = cityResponse.getResult().getPlaceId();
+    public City(@NonNull CityResponse cityResponse) {
+        Result result = cityResponse.getResult();
+        if (result.getName() != null) {
+            name = result.getName();
+        } else name = "";
+        latitude = result.getGeometry().getLocation().getLat();
+        longitude = result.getGeometry().getLocation().getLng();
+        if (result.getPlaceId() != null) {
+            placeId = result.getPlaceId();
+        } else placeId = "";
     }
 
-    public City(String name, double latitude, double longitude) {
+    public City(@NonNull String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        placeId = "";
     }
 
     public void setId(long id) {
@@ -84,19 +85,29 @@ public class City {
     }
 
     @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("City{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", latutide=").append(latitude);
-        sb.append(", longitude=").append(longitude);
-        sb.append('}');
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof City)) return false;
+
+        City city = (City) o;
+
+        if (Double.compare(city.latitude, latitude) != 0) return false;
+        if (Double.compare(city.longitude, longitude) != 0) return false;
+        if (!placeId.equals(city.placeId)) return false;
+        return name.equals(city.name);
+
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        return this.toString().equals(o.toString());
+    public int hashCode() {
+        int result;
+        long temp;
+        result = placeId.hashCode();
+        result = 31 * result + name.hashCode();
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

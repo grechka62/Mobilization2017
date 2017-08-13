@@ -5,10 +5,12 @@ import com.exwhythat.mobilization.repository.weatherRepository.LocalWeatherRepos
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +21,7 @@ import utils.CaptorUtils;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Fail.fail;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.when;
  * Created by Grechka on 10.08.2017.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class LocalWeatherRepositoryImplUnitTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)

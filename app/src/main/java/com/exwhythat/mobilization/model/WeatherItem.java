@@ -39,7 +39,9 @@ public class WeatherItem {
     @Column("wind_degree") private double windDegree;
     @WeatherTypes private int type;
 
-    public WeatherItem(){};
+    public WeatherItem(){
+        description = "";
+    };
 
     public WeatherItem(WeatherResponse response) {
         updateTime = Calendar.getInstance().getTimeInMillis();
@@ -114,5 +116,44 @@ public class WeatherItem {
 
     public int getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WeatherItem)) return false;
+
+        WeatherItem item = (WeatherItem) o;
+
+        if (cityId != item.cityId) return false;
+        if (updateTime != item.updateTime) return false;
+        if (weatherTime != item.weatherTime) return false;
+        if (Double.compare(item.temperature, temperature) != 0) return false;
+        if (Double.compare(item.humidity, humidity) != 0) return false;
+        if (Double.compare(item.windSpeed, windSpeed) != 0) return false;
+        if (Double.compare(item.windDegree, windDegree) != 0) return false;
+        if (type != item.type) return false;
+        return description.equals(item.description);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (int) (cityId ^ (cityId >>> 32));
+        result = 31 * result + (int) (updateTime ^ (updateTime >>> 32));
+        result = 31 * result + (int) (weatherTime ^ (weatherTime >>> 32));
+        result = 31 * result + description.hashCode();
+        temp = Double.doubleToLongBits(temperature);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(humidity);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(windSpeed);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(windDegree);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + type;
+        return result;
     }
 }
