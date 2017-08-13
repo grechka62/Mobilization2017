@@ -8,8 +8,8 @@ import javax.inject.Inject;
  * Created by exwhythat on 07.07.17.
  */
 
-public class AboutPresenterImpl<V extends AboutView> extends BasePresenterImpl<V>
-        implements AboutPresenter<V> {
+public class AboutPresenterImpl extends BasePresenterImpl<AboutView>
+        implements AboutPresenter {
 
     @Inject
     public AboutPresenterImpl() {

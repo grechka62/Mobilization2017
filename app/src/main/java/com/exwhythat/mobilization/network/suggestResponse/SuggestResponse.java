@@ -3,7 +3,6 @@ package com.exwhythat.mobilization.network.suggestResponse;
 
 import java.util.List;
 
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

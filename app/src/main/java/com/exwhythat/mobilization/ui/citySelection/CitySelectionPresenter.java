@@ -9,6 +9,6 @@ import io.reactivex.Observable;
  */
 
 public interface CitySelectionPresenter extends BasePresenter<CitySelectionView> {
-    void onTextChanges(Observable<CharSequence> input);
-    void onSuggestClick(CharSequence placeId);
+    void observeCityInput(Observable<CharSequence> input);
+    void chooseCity(CharSequence placeId);
 }

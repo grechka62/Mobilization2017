@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 
 import java.util.ArrayList;
 import java.util.List;

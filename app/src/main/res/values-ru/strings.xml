@@ -5,10 +5,12 @@
     <string name="action_settings">Настройки</string>
     <string name="action_about">О программе</string>
     <string name="action_refresh">Обновить</string>
-    <string name="action_city_selection">Выбор города</string>
+    <string name="action_add_city">Выбрать город</string>
+    <string name="action_delete_city">Удалить город</string>
 
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_with_msg">Ошибка! Причина: %1$s</string>
 
-    <string name="city_selection_message">Введите название населенного пункта</string>
+    <string name="city_selection_message">Начните вводить</string>
+    <string name="yandex_logo">Логотип Яндекса</string>
 </resources>

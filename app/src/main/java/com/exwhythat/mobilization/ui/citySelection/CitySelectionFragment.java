@@ -13,9 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.di.component.ActivityComponent;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
+import com.exwhythat.mobilization.network.suggestResponse.Prediction;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
@@ -36,9 +36,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Inject
     CitySelectionPresenter presenter;
 
-    private EditText editCity;
-    private TextView placeId;
-    private TextView hint;
     private ProgressBar loading;
 
     private RecyclerView suggestList;
@@ -53,29 +50,22 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        App.getComponent().inject(this);
+        setMenuVisibility(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_city_selection, container, false);
-
-        ActivityComponent component = getActivityComponent();
-        if (component != null) {
-            component.inject(this);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_city_selection, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editCity = ButterKnife.findById(view, R.id.edit_city);
+        EditText editCity = ButterKnife.findById(view, R.id.edit_city);
         suggestList = ButterKnife.findById(view, R.id.suggest_recycler);
-        hint = ButterKnife.findById(view, R.id.city_input_hint);
         loading = ButterKnife.findById(view, R.id.loading_suggest);
 
         suggestAdapter = new CitySelectionAdapter();
@@ -83,7 +73,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
         suggestList.setAdapter(suggestAdapter);
         suggestAdapter.setListener(this);
 
-        presenter.onTextChanges(RxTextView.textChanges(editCity)
+        presenter.observeCityInput(RxTextView.textChanges(editCity)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .filter(text -> text.length() > 0));
     }
@@ -91,7 +81,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_city_selection);
         presenter.onAttach(this);
     }
 
@@ -110,21 +99,25 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void showCitySuggest(Prediction suggest) {
         suggestAdapter.add(suggest);
         loading.setVisibility(View.GONE);
-        suggestList.setAdapter(suggestAdapter);
+        suggestAdapter.notifyDataSetChanged();
         suggestList.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onClick(View view) {
-        placeId = view.findViewById(R.id.place_id);
-        presenter.onSuggestClick(placeId.getText());
+        TextView placeId = view.findViewById(R.id.place_id);
+        presenter.chooseCity(placeId.getText());
     }
 
     @Override
     public void showLoading() {
-        hint.setVisibility(View.GONE);
         suggestList.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        loading.setVisibility(View.GONE);
     }
 
     @Override
@@ -135,7 +128,6 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     @Override
     public void showError(Throwable throwable) {
         loading.setVisibility(View.GONE);
-        hint.setVisibility(View.VISIBLE);
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
         Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
     }

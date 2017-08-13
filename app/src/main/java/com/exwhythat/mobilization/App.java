@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.exwhythat.mobilization.di.component.AppComponent;
-import com.exwhythat.mobilization.di.component.DaggerAppComponent;
+import com.exwhythat.mobilization.di.AppComponent;
+import com.exwhythat.mobilization.di.DaggerAppComponent;
 import com.exwhythat.mobilization.di.module.AppModule;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
@@ -18,7 +18,7 @@ import timber.log.Timber;
 
 public class App extends Application {
 
-    private AppComponent appComponent;
+    private static AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -57,5 +57,9 @@ public class App extends Application {
             // Add line number to every log message
             return super.createStackElementTag(element) + ":" + element.getLineNumber();
         }
+    }
+
+    public static AppComponent getComponent() {
+        return appComponent;
     }
 }

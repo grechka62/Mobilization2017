@@ -2,14 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
     defaultConfig {
         applicationId "com.exwhythat.mobilization"
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.code
+        versionName versions.name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -35,49 +36,54 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     /** Testing */
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile(libraries.espressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2', {
+    androidTestCompile(libraries.espressoContrib, {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'design'
         exclude module: 'recyclerview-v7'
     })
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.8.47'
-    androidTestCompile 'org.mockito:mockito-android:2.8.47'
-    testCompile 'org.robolectric:robolectric:3.3.2'
+    testCompile libraries.junit
+    testCompile libraries.mockito
+    androidTestCompile libraries.mockitoAndroid
+    testCompile libraries.robolectric
     /** Support */
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.android.support:design:26.0.0-alpha1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile libraries.supportAppCompat
+    compile libraries.supportDesign
+    compile libraries.supportCardView
+    compile libraries.constraint
     /** DI */
-    compile 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    compile libraries.dagger
+    annotationProcessor libraries.daggerCompiler
     /** Smart logger */
-    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile libraries.timber
     /** Less boilerplate */
-    compile 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile libraries.butterknife
+    annotationProcessor libraries.butterknifeCompiler
     /** Debug tool. Should be debugCompile */
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    compile libraries.stetho
+    compile libraries.stethoOkhttp
     /** Memory leaks detection. No-op versions are almost empty */
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    debugCompile libraries.leakcanary
+    releaseCompile libraries.leakcanaryNoOp
+    testCompile libraries.leakcanaryNoOp
     /** Network */
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile libraries.retrofit
+    compile libraries.gson
+    compile libraries.converterGson
+    compile libraries.okhttpLogging
     /** Rx2 */
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.1'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+    compile libraries.rxandroid
+    compile libraries.rxjava
+    compile libraries.rxadapter
+    compile libraries.rxbinding
+    /** Database */
+    compile libraries.rxcupboard
+    /** Streams */
+    compile libraries.streams
+
 }

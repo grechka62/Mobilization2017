@@ -1,7 +1,6 @@
 
 package com.exwhythat.mobilization.network.cityResponse;
 
-import com.exwhythat.mobilization.network.cityResponse.part.Result;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

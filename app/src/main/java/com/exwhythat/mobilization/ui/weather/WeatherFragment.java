@@ -1,52 +1,56 @@
 package com.exwhythat.mobilization.ui.weather;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
-import com.exwhythat.mobilization.di.component.ActivityComponent;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
-import com.exwhythat.mobilization.util.DataPrefs;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
 public class WeatherFragment extends BaseFragment implements WeatherView,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = WeatherFragment.class.getCanonicalName();
+    private final static String CHECKED_CITY = "city";
+    private long checkedCityId;
 
     @Inject
-    WeatherPresenter<WeatherView> presenter;
+    WeatherPresenter presenter;
 
-    private ProgressBar pbLoading;
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    private TextView tvResult;
-    private TextView tvError;
+    private TextView temperature;
+    private TextView description;
+    private TextView humidity;
+    private TextView wind;
 
-    public WeatherFragment() {}
+    private ForecastAdapter forecastAdapter;
+
+    public WeatherFragment() {
+    }
 
     @NonNull
-    public static WeatherFragment newInstance() {
+    public static WeatherFragment newInstance(long checkedCityId) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
+        args.putLong(CHECKED_CITY, checkedCityId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,64 +58,47 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getComponent().inject(this);
         if (getArguments() != null) {
+            checkedCityId = getArguments().getLong(CHECKED_CITY);
         }
-        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_weather, container, false);
-
-        ActivityComponent component = getActivityComponent();
-        if (component != null) {
-            component.inject(this);
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_weather, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getContext(), "View created!", Toast.LENGTH_SHORT).show();
+        temperature = ButterKnife.findById(view, R.id.temperature);
+        description = ButterKnife.findById(view, R.id.description);
+        humidity = ButterKnife.findById(view, R.id.humidity_value);
+        wind = ButterKnife.findById(view, R.id.wind_value);
+        RecyclerView forecastList = ButterKnife.findById(view, R.id.forecast_recycler);
 
-        pbLoading = ButterKnife.findById(view, R.id.pbLoadingWeather);
-        tvResult = ButterKnife.findById(view, R.id.tvResult);
-        tvError = ButterKnife.findById(view, R.id.tvError);
+        forecastAdapter = new ForecastAdapter();
+        forecastList.setLayoutManager(new LinearLayoutManager(getContext()));
+        forecastList.setAdapter(forecastAdapter);
+
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.action_weather);
         presenter.onAttach(this);
+        presenter.observeCheckedCity();
+        presenter.observeWeather();
+        presenter.obtainWeather(checkedCityId);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                presenter.onRefreshData();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
-        weatherPrefs.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        SharedPreferences weatherPrefs = DataPrefs.getDataPrefs(getContext());
-        weatherPrefs.unregisterOnSharedPreferenceChangeListener(this);
+    public void onRefresh() {
+        presenter.refreshWeather();
     }
 
     @Override
@@ -122,43 +109,35 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
     @Override
     public void showLoading() {
-        tvResult.setVisibility(View.GONE);
-        pbLoading.setVisibility(View.VISIBLE);
-        tvError.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideLoading() {
-        pbLoading.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(true);
+        forecastAdapter.clear();
     }
 
     @Override
     public void showResult(WeatherItem item) {
-        // TODO: extract data-related stuff to separate class
-        long dateInSeconds = item.getDate();
-        Date date = new Date(dateInSeconds * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        // TODO: make a good layout for weather representation or use string holders
-        tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nMain: " + item.getMain() + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemp());
+        checkedCityId = item.getCity();
+        getArguments().putLong(CHECKED_CITY, checkedCityId);
+        temperature.setText(Long.toString(Math.round(item.getTemperature())));
+        description.setText(item.getDescription());
+        humidity.setText(Long.toString(Math.round(item.getHumidity())));
+        wind.setText(Long.toString(Math.round(item.getWindSpeed())));
+        forecastAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+    }
 
-        tvResult.setVisibility(View.VISIBLE);
-        pbLoading.setVisibility(View.GONE);
-        tvError.setVisibility(View.GONE);
+    @Override
+    public void showForecast(List<WeatherItem> forecast) {
+        forecastAdapter.addAll(forecast);
+    }
+
+    public void showForecastItem(WeatherItem weatherItem) {
+        forecastAdapter.add(weatherItem);
     }
 
     @Override
     public void showError(Throwable throwable) {
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
-        tvError.setText(errorText);
-
-        tvResult.setVisibility(View.GONE);
-        pbLoading.setVisibility(View.GONE);
-        tvError.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        presenter.onPrefsChanged();
+        Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

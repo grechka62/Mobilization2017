@@ -1,41 +1,36 @@
 package com.exwhythat.mobilization.repository.cityRepository;
 
-import android.content.Context;
+import com.exwhythat.mobilization.model.CheckedCity;
+import com.exwhythat.mobilization.model.City;
 
-import com.exwhythat.mobilization.di.ActivityContext;
-import com.exwhythat.mobilization.model.CityInfo;
-import com.exwhythat.mobilization.network.suggestResponse.part.Prediction;
-import com.exwhythat.mobilization.util.CityPrefs;
-
-import javax.inject.Inject;
-
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import nl.nl2312.rxcupboard2.DatabaseChange;
 
 /**
- * Created by Grechka on 28.07.2017.
+ * Created by Grechka on 27.07.2017.
  */
 
-public class LocalCityRepository implements CityRepository {
+public interface LocalCityRepository {
 
-    private Context context;
+    Single<City> getCityInfo(String placeId);
 
-    @Inject
-    public LocalCityRepository(@ActivityContext Context context) {
-        this.context = context;
-    }
-    @Override
-    public Observable<Prediction> getCitySuggest(String input) {
-        return null;
-    }
+    Single<City> getCheckedCity(long id);
 
-    @Override
-    public Single<CityInfo> getCityInfo(String placeId) {
-        return Single.just(CityPrefs.getCity(context));
-    }
+    Single<CheckedCity> putCity(City city);
 
-    @Override
-    public void putCity(CityInfo city) {
-        CityPrefs.putCity(context, city);
-    }
+    Single<CheckedCity> changeCheckedCity(long id);
+
+    Observable<City> getAllCities();
+
+    Single<CheckedCity> initCheckedCity();
+
+    Single<CheckedCity> getCheckedId();
+
+    Flowable<DatabaseChange<CheckedCity>> observeCheckedCity();
+
+    Flowable<DatabaseChange<City>> observeCity();
+
+    Single<City> deleteCity(int id);
 }

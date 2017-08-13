@@ -1,12 +1,8 @@
 package com.exwhythat.mobilization.network.weatherResponse;
 
-import com.exwhythat.mobilization.network.weatherResponse.part.Clouds;
-import com.exwhythat.mobilization.network.weatherResponse.part.Coord;
-import com.exwhythat.mobilization.network.weatherResponse.part.Main;
-import com.exwhythat.mobilization.network.weatherResponse.part.Rain;
-import com.exwhythat.mobilization.network.weatherResponse.part.Sys;
-import com.exwhythat.mobilization.network.weatherResponse.part.Weather;
-import com.exwhythat.mobilization.network.weatherResponse.part.Wind;
+import com.exwhythat.mobilization.model.part.Main;
+import com.exwhythat.mobilization.model.part.Weather;
+import com.exwhythat.mobilization.model.part.Wind;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,42 +13,22 @@ import java.util.List;
  */
 
 public class WeatherResponse {
-    @SerializedName("coord")
-    @Expose
-    private Coord coord;
+
     @SerializedName("weather")
     @Expose
     private List<Weather> weather = null;
-    @SerializedName("base")
-    @Expose
-    private String base;
+
     @SerializedName("main")
     @Expose
     private Main main;
+
     @SerializedName("wind")
     @Expose
     private Wind wind;
-    @SerializedName("clouds")
-    @Expose
-    private Clouds clouds;
-    @SerializedName("rain")
-    @Expose
-    private Rain rain;
+
     @SerializedName("dt")
     @Expose
     private long date;
-    @SerializedName("sys")
-    @Expose
-    private Sys sys;
-    @SerializedName("id")
-    @Expose
-    private int cityId;
-    @SerializedName("name")
-    @Expose
-    private String cityName;
-    @SerializedName("cod")
-    @Expose
-    private int cod;
 
     public WeatherResponse(Main main, List<Weather> weather, long date) {
         this.main = main;
@@ -70,6 +46,10 @@ public class WeatherResponse {
 
     public long getDate() {
         return date;
+    }
+
+    public Wind getWind() {
+        return wind;
     }
 
     @Override

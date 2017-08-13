@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFC107</color>
-    <color name="colorPrimaryDark">#FFA000</color>
+    <color name="colorPrimary">#FFFFCC</color>
+    <color name="colorPrimaryDark">#ffcc00</color>
     <color name="colorAccent">#FFEB3B</color>
+    <color name="colorControlHighlight">#1559c0</color>
+    <color name="colorControlNormal">#3fc328</color>
+    <color name="colorSwitchThumbNormal">#e92020</color>
+    <color name="colorForeground">#2fe7d8</color>
+
 </resources>

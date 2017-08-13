@@ -1,5 +1,6 @@
 package com.exwhythat.mobilization.presenters;
 
+import com.exwhythat.mobilization.repository.cityRepository.LocalCityRepositoryImpl;
 import com.exwhythat.mobilization.ui.main.MainPresenter;
 import com.exwhythat.mobilization.ui.main.MainPresenterImpl;
 import com.exwhythat.mobilization.ui.main.MainView;
@@ -18,7 +19,12 @@ import static org.mockito.Mockito.verify;
  */
 
 public class MainPresenterUnitTest {
-    private MainPresenter<MainView> presenter = new MainPresenterImpl<>();
+
+    @Mock
+    LocalCityRepositoryImpl repository;
+
+    private MainPresenter presenter;
+
 
     @Mock
     MainView view;
@@ -26,30 +32,25 @@ public class MainPresenterUnitTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        presenter = new MainPresenterImpl(repository);
         presenter.onAttach(view);
     }
 
     @Test
-    public void shouldGoToWeather() {
-        presenter.onDrawerWeatherClick();
-        verify(view, only()).showWeather();
-    }
-
-    @Test
     public void shouldGoToSettings() {
-        presenter.onDrawerSettingsClick();
+        presenter.goToSettings();
         verify(view, only()).showSettings();
     }
 
     @Test
     public void shouldGoToAbout() {
-        presenter.onDrawerAboutClick();
+        presenter.goToAbout();
         verify(view, only()).showAbout();
     }
 
     @Test
     public void shouldGoToCitySelection() {
-        presenter.onDrawerCitySelectionClick();
+        presenter.goToCitySelection();
         verify(view, only()).showCitySelection();
     }
 
