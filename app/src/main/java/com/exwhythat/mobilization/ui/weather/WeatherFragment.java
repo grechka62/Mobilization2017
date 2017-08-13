@@ -5,26 +5,20 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exwhythat.mobilization.App;
 import com.exwhythat.mobilization.R;
 import com.exwhythat.mobilization.model.WeatherItem;
 import com.exwhythat.mobilization.ui.base.BaseFragment;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -46,7 +40,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     private TextView description;
     private TextView humidity;
     private TextView wind;
-    //private TextView tvError;
 
     private ForecastAdapter forecastAdapter;
 
@@ -84,7 +77,6 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         description = ButterKnife.findById(view, R.id.description);
         humidity = ButterKnife.findById(view, R.id.humidity_value);
         wind = ButterKnife.findById(view, R.id.wind_value);
-        //tvError = ButterKnife.findById(view, R.id.tvError);
         RecyclerView forecastList = ButterKnife.findById(view, R.id.forecast_recycler);
 
         forecastAdapter = new ForecastAdapter();
@@ -125,18 +117,10 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     public void showResult(WeatherItem item) {
         checkedCityId = item.getCity();
         getArguments().putLong(CHECKED_CITY, checkedCityId);
-        // TODO: extract data-related stuff to separate class
-        Date date = new Date(item.getUpdateTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        // TODO: make a good layout for weather representation or use string holders
-        /*tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemperature());
-        tvResult.setVisibility(View.VISIBLE);*/
         temperature.setText(Long.toString(Math.round(item.getTemperature())));
         description.setText(item.getDescription());
         humidity.setText(Long.toString(Math.round(item.getHumidity())));
         wind.setText(Long.toString(Math.round(item.getWindSpeed())));
-        //tvError.setVisibility(View.GONE);
         forecastAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -153,8 +137,7 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void showError(Throwable throwable) {
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
-       /* tvError.setText(errorText);
-        tvError.setVisibility(View.VISIBLE);*/
+        Toast.makeText(getContext(), errorText, Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 }
