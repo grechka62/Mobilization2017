@@ -9,8 +9,8 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_add_city"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/action_add_city"/>
+            android:icon="@drawable/ic_add"
+            android:title="@string/action_add_city" />
 
         <item
             android:id="@+id/nav_settings"

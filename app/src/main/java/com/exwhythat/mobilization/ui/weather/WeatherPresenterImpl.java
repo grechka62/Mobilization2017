@@ -92,8 +92,6 @@ public class WeatherPresenterImpl extends BasePresenterImpl<WeatherView>
     @Override
     public void refreshWeather() {
         disposable.dispose();
-        WeatherView v = getMvpView();
-        if (v != null) v.showLoading();
         disposable = cityRepository.getCheckedCity(checkedCityId)
                 .flatMapObservable(weatherInteractor::updateWeather)
                 .subscribeOn(Schedulers.io())

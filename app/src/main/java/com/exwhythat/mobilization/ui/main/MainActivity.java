@@ -16,6 +16,7 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -60,7 +61,6 @@ public class MainActivity extends BaseActivity
     NavigationView navigationView;
 
     Menu menu;
-    TextView title;
 
     private ActionBarDrawerToggle drawerToggle;
     private DrawerArrowDrawable homeDrawable;
@@ -113,7 +113,6 @@ public class MainActivity extends BaseActivity
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
         if (!usePane) {
             homeDrawable = new DrawerArrowDrawable(toolbar.getContext());
@@ -134,8 +133,6 @@ public class MainActivity extends BaseActivity
             drawerToggle = new ActionBarDrawerToggle(
                     this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawerLayout.addDrawerListener(drawerToggle);
-        } else {
-            //paneLayout.setPanelSlideListener(this);
         }
         presenter.initCities();
     }
@@ -151,8 +148,9 @@ public class MainActivity extends BaseActivity
                 int itemId = (int) cities.get(i).getId();
                 menu.add(R.id.topItems, itemId, i, cities.get(i).getName());
                 item = menu.getItem(i);
-                item.setIcon(R.drawable.ic_menu_send);
+                item.setIcon(R.drawable.ic_sunny);
                 item.setActionView(R.layout.menu_city_item);
+                item.getActionView().setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 item.getActionView().findViewById(R.id.delete_city_but)
                         .setOnClickListener(view -> presenter.deleteCity(itemId, checkedCityId));
             }
@@ -160,8 +158,8 @@ public class MainActivity extends BaseActivity
         } else {
             presenter.initCheckedCity();
         }
-        menu.add(R.id.botItems, R.id.nav_add_city, cityCount+10, getResources().getString(R.string.action_add_city));
-        menu.getItem(cities.size()).setIcon(R.drawable.ic_menu_send);
+        menu.add(R.id.botItems, R.id.nav_add_city, cityCount + 10, getResources().getString(R.string.action_add_city));
+        menu.getItem(cities.size()).setIcon(R.drawable.ic_add);
         menu.add(R.id.botItems, R.id.nav_settings, cityCount + 11, getResources().getString(R.string.action_settings));
         menu.getItem(cities.size() + 1).setIcon(R.drawable.ic_settings);
         menu.add(R.id.botItems, R.id.nav_about, cityCount + 12, getResources().getString(R.string.action_about));
@@ -171,27 +169,21 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void setCheckedCity(int id) {
+        if (menu.findItem((int) checkedCityId) != null) {
+            menu.findItem((int) checkedCityId).setChecked(false);
+        }
         checkedCityId = id;
         if ((!recreate) && checkedCityId > 0) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_placeholder,
-                            WeatherFragment.newInstance(checkedCityId), WeatherFragment.TAG)
-                    .commit();
+            showWeather();
             recreate = true;
         }
-        navigationView.setCheckedItem(id);
+        menu.findItem(id).setChecked(true);
     }
 
     @Override
     public void deleteCity(int itemId) {
         menu.removeItem(itemId);
         cityCount--;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
@@ -203,9 +195,6 @@ public class MainActivity extends BaseActivity
         }
 
         switch (item.getItemId()) {
-            case R.id.action_refresh:
-                // Delegate to WeatherFragment
-                return false;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -352,7 +341,7 @@ public class MainActivity extends BaseActivity
             int lastIndex = stackSize - 1;
             return (fragmentManager.getBackStackEntryAt(lastIndex).getName().equals(tag));
         } else {
-            return tag.equals(WeatherFragment.TAG);
+            return tag.equals(WeatherFragment.TAG) && (fragmentManager.findFragmentByTag(tag) != null);
         }
     }
 

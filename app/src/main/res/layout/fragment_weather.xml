@@ -1,61 +1,60 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/weather_fragment_layout"
+    android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context=".ui.main.MainActivity">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
+        android:id="@+id/weather_fragment_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        app:contentPadding="@dimen/padding_normal"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/current_weather_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_weight="0.3"
+            app:contentPadding="@dimen/padding_normal">
 
-            <TextView
-                android:id="@+id/tvResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:visibility="gone" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvError"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/error_unknown"
-                android:textSize="@dimen/text_big"
-                android:visibility="gone" />
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tvResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
 
-    </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/error_unknown"
+                    android:textSize="@dimen/text_big"
+                    android:visibility="gone" />
+            </android.support.constraint.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/pbLoadingWeather"
-        android:layout_height="@dimen/progress_bar_size"
-        android:layout_width="@dimen/progress_bar_size"
-        android:visibility="gone" />
+        </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        app:contentPadding="@dimen/padding_normal">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/forecast_recycler"
+        <android.support.v7.widget.CardView
+            android:id="@+id/forecast_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v7.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            app:contentPadding="@dimen/padding_normal">
 
-</LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/forecast_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

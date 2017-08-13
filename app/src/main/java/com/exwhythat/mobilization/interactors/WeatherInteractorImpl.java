@@ -29,8 +29,6 @@ public class WeatherInteractorImpl implements WeatherInteractor {
     private WeatherRepository remoteRepo;
     private LocalWeatherRepository localRepo;
 
-    private Disposable disposable = new CompositeDisposable();
-
     @Inject
     public WeatherInteractorImpl(RemoteWeatherRepositoryImpl remoteRepo, LocalWeatherRepositoryImpl localRepo) {
         super();
@@ -40,8 +38,8 @@ public class WeatherInteractorImpl implements WeatherInteractor {
 
     @Override
     public Observable<WeatherItem> getSavedWeather(City city) {
-        return Observable.concat(localRepo.getCurrentWeather(city).toObservable(),
-                localRepo.getForecast(city));
+        return Observable.concat(localRepo.getForecast(city),
+                localRepo.getCurrentWeather(city).toObservable());
     }
 
     @Override
@@ -51,20 +49,16 @@ public class WeatherInteractorImpl implements WeatherInteractor {
                 .doOnNext(weatherList::add)
                 .doOnTerminate(() -> {
                     if ((weatherList.size() < 11) ||
-                            (weatherList.get(10).getCity() != city.getId())) {
-                        updateWeather(city);
+                            (weatherList.get(9).getCity() != city.getId())) {
+                        updateWeather(city).subscribeOn(Schedulers.io()).subscribe();
                     }
                 });
     }
 
     @Override
     public Observable<WeatherItem> updateWeather(City city) {
-        disposable.dispose();
         List<WeatherItem> forecast = new ArrayList<>();
-        return Observable.concat(remoteRepo.getCurrentWeather(city)
-                        .flatMap(weatherItem -> putCurrentWeather(weatherItem, city))
-                        .toObservable(),
-                remoteRepo.getForecast(city)
+        return Observable.concat(remoteRepo.getForecast(city)
                         .map(weatherItem -> addItemToForecast(forecast, weatherItem, city))
                         .flatMap(weatherItem -> {
                             if (forecast.size() == 10) {
@@ -72,8 +66,10 @@ public class WeatherInteractorImpl implements WeatherInteractor {
                             } else {
                                 return Observable.just(weatherItem);
                             }
-                        })
-        );
+                        }),
+                remoteRepo.getCurrentWeather(city)
+                        .flatMap(weatherItem -> putCurrentWeather(weatherItem, city))
+                        .toObservable());
     }
 
     private Single<WeatherItem> putCurrentWeather(WeatherItem weatherItem, City city) {

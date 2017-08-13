@@ -6,10 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/colorControlHighlight</item>​
-        <item name="colorControlNormal">@color/colorControlNormal</item>
-        <item name="colorSwitchThumbNormal">@color/colorSwitchThumbNormal</item>
-        <item name="android:colorForeground">@color/colorForeground</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -24,6 +20,14 @@
     <style name="RadioButton">
         <item name="android:textSize">@dimen/text_big</item>
         <item name="android:drawableEnd">@drawable/ic_refresh</item>
+        <item name="android:paddingLeft">@dimen/padding_normal</item>
+        <item name="android:paddingRight">@dimen/padding_normal</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="MenuItems" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

@@ -1,8 +1,5 @@
 package com.exwhythat.mobilization.ui.citySelection;
 
-import android.graphics.Paint;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,7 +52,7 @@ public class CitySelectionFragment extends BaseFragment implements CitySelection
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getComponent().inject(this);
-        setHasOptionsMenu(false);
+        setMenuVisibility(false);
     }
 
     @Override
