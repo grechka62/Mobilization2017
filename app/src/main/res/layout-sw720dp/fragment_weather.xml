@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="@dimen/activity_vertical_margin">
 
         <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="0.4"
+            android:id="@+id/current_weather_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_weight="0.3"
             app:contentPadding="@dimen/padding_normal">
 
             <android.support.constraint.ConstraintLayout
@@ -30,9 +30,9 @@
                     android:id="@+id/temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
+                    android:padding="16dp"
                     android:text="20"
-                    android:textSize="64sp"
+                    android:textSize="96sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -40,9 +40,9 @@
                     android:id="@+id/degree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="32dp"
                     android:text="C"
-                    android:textSize="32sp"
+                    android:textSize="48sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/temperature"/>
 
@@ -51,35 +51,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ясно"
-                    android:textSize="24sp"
+                    android:textSize="48sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
                     android:id="@+id/humidity_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Влажность: "
-                    android:textSize="20sp"
+                    android:textSize="40sp"
                     app:layout_constraintEnd_toStartOf="@+id/humidity_value"
-                    app:layout_constraintBottom_toTopOf="@+id/description"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/humidity_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="80%"
-                    android:textSize="20sp"
+                    android:textSize="40sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/description"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/wind_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ветер: "
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toTopOf="@+id/humidity_title"
+                    android:textSize="40sp"
+                    app:layout_constraintTop_toBottomOf="@+id/humidity_title"
                     app:layout_constraintEnd_toStartOf="@+id/wind_value"/>
 
                 <TextView
@@ -87,8 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 м/с"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toTopOf="@+id/humidity_value"
+                    android:textSize="40sp"
+                    app:layout_constraintTop_toBottomOf="@+id/humidity_value"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             </android.support.constraint.ConstraintLayout>
@@ -96,20 +96,16 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="0.6"
+            android:id="@+id/forecast_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
             app:contentPadding="@dimen/padding_normal">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/forecast_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:scrollbars="none"
-                tools:listitem="@layout/row_forecast" />
+                android:layout_height="match_parent" />
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

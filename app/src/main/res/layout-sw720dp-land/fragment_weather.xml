@@ -30,9 +30,9 @@
                     android:id="@+id/temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
+                    android:padding="16dp"
                     android:text="20"
-                    android:textSize="64sp"
+                    android:textSize="128sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -40,9 +40,9 @@
                     android:id="@+id/degree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_margin="32dp"
                     android:text="C"
-                    android:textSize="32sp"
+                    android:textSize="64sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/temperature"/>
 
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ясно"
-                    android:textSize="24sp"
+                    android:textSize="32sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Влажность: "
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:layout_constraintEnd_toStartOf="@+id/humidity_value"
                     app:layout_constraintBottom_toTopOf="@+id/description"/>
 
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="80%"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/description"/>
 
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ветер: "
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toTopOf="@+id/humidity_title"
                     app:layout_constraintEnd_toStartOf="@+id/wind_value"/>
 
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 м/с"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toTopOf="@+id/humidity_value"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

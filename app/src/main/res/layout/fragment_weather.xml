@@ -27,18 +27,70 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/tvResult"
+                    android:id="@+id/temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:padding="4dp"
+                    android:text="20"
+                    android:textSize="48sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView
-                    android:id="@+id/tvError"
+                    android:id="@+id/degree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/error_unknown"
-                    android:textSize="@dimen/text_big"
-                    android:visibility="gone" />
+                    android:layout_margin="8dp"
+                    android:text="C"
+                    android:textSize="24sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/temperature"/>
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ясно"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/humidity_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Влажность: "
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/humidity_value"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/humidity_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="80%"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/wind_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ветер: "
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@+id/humidity_title"
+                    app:layout_constraintEnd_toStartOf="@+id/wind_value"/>
+
+                <TextView
+                    android:id="@+id/wind_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 м/с"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@+id/humidity_value"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>

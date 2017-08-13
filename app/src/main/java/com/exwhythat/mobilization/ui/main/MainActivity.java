@@ -179,6 +179,7 @@ public class MainActivity extends BaseActivity
             recreate = true;
         }
         menu.findItem(id).setChecked(true);
+        toolbar.setTitle(menu.findItem(id).getTitle());
     }
 
     @Override
@@ -260,7 +261,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void showWeather() {
         showFragment(FragmentCodes.WEATHER);
-        toolbar.setTitle(R.string.action_weather);
     }
 
     @Override

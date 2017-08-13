@@ -42,8 +42,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
 
     SwipeRefreshLayout swipeRefreshLayout;
 
-    private TextView tvResult;
-    private TextView tvError;
+    private TextView temperature;
+    private TextView description;
+    private TextView humidity;
+    private TextView wind;
+    //private TextView tvError;
 
     private ForecastAdapter forecastAdapter;
 
@@ -77,8 +80,11 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvResult = ButterKnife.findById(view, R.id.tvResult);
-        tvError = ButterKnife.findById(view, R.id.tvError);
+        temperature = ButterKnife.findById(view, R.id.temperature);
+        description = ButterKnife.findById(view, R.id.description);
+        humidity = ButterKnife.findById(view, R.id.humidity_value);
+        wind = ButterKnife.findById(view, R.id.wind_value);
+        //tvError = ButterKnife.findById(view, R.id.tvError);
         RecyclerView forecastList = ButterKnife.findById(view, R.id.forecast_recycler);
 
         forecastAdapter = new ForecastAdapter();
@@ -124,9 +130,13 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy\nHH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         // TODO: make a good layout for weather representation or use string holders
-        tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemperature());
-        tvResult.setVisibility(View.VISIBLE);
-        tvError.setVisibility(View.GONE);
+        /*tvResult.setText("City: " + item.getCity() + "\nDate: " + sdf.format(date) + "\nDesc: " + item.getDescription() + "\nTemp: " + item.getTemperature());
+        tvResult.setVisibility(View.VISIBLE);*/
+        temperature.setText(Long.toString(Math.round(item.getTemperature())));
+        description.setText(item.getDescription());
+        humidity.setText(Long.toString(Math.round(item.getHumidity())));
+        wind.setText(Long.toString(Math.round(item.getWindSpeed())));
+        //tvError.setVisibility(View.GONE);
         forecastAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -143,9 +153,8 @@ public class WeatherFragment extends BaseFragment implements WeatherView,
     @Override
     public void showError(Throwable throwable) {
         String errorText = String.format(getString(R.string.error_with_msg), throwable.getLocalizedMessage());
-        tvResult.setVisibility(View.GONE);
-        tvError.setText(errorText);
-        tvError.setVisibility(View.VISIBLE);
+       /* tvError.setText(errorText);
+        tvError.setVisibility(View.VISIBLE);*/
         swipeRefreshLayout.setRefreshing(false);
     }
 }
